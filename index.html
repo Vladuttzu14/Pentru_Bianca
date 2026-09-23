@@ -6,7 +6,7 @@
 <title>Pentru Bia 💗</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&family=Special+Elite&display=swap');
 
 :root{
     --pink:#f59ab7;
@@ -26,65 +26,66 @@ body{
     font-family:"DM Sans",sans-serif;
     color:var(--text);
     background:
-        radial-gradient(circle at 10% 10%, rgba(255,255,255,.9) 0 4px, transparent 5px),
-        radial-gradient(circle at 85% 20%, rgba(255,255,255,.7) 0 3px, transparent 4px),
+        radial-gradient(circle at 10% 10%,rgba(255,255,255,.9) 0 4px,transparent 5px),
+        radial-gradient(circle at 85% 20%,rgba(255,255,255,.7) 0 3px,transparent 4px),
         linear-gradient(135deg,#f8b4c9,#f7d2de 48%,#fff0f5);
     overflow-x:hidden;
 }
+
+body.photo-zoom-open{overflow:hidden}
 
 .phone-memory{
     position:fixed;
     right:30px;
     bottom:30px;
-
     width:180px;
     height:180px;
-
     border-radius:50%;
     overflow:hidden;
-
     border:5px solid rgba(255,255,255,.95);
-
-    box-shadow:
-        0 10px 30px rgba(100,40,65,.25),
-        0 0 0 6px rgba(255,255,255,.25);
-
+    box-shadow:0 10px 30px rgba(100,40,65,.25),0 0 0 6px rgba(255,255,255,.25);
     z-index:9999;
-
     background:#f8c2d5;
-
-    /* ASCUNS implicit */
     display:none;
-
     animation:floatMemory 3s ease-in-out infinite;
 }
 
 .phone-memory img{
     width:100%;
     height:100%;
-
     object-fit:cover;
     object-position:60% 50%;
-
     display:block;
 }
 
 @keyframes floatMemory{
-    0%,100%{
-        transform:translateY(0);
-    }
-
-    50%{
-        transform:translateY(-7px);
-    }
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-7px)}
 }
 
-.phone-memory.show-memory{
-    display:block;
+.phone-memory.show-memory{display:block}
+
+#musicToggle{
+    position:fixed;
+    right:18px;
+    bottom:18px;
+    z-index:10001;
+    width:52px;
+    height:52px;
+    border:2px solid white;
+    border-radius:50%;
+    background:#d94f7c;
+    color:white;
+    font-size:23px;
+    cursor:pointer;
+    box-shadow:0 6px 18px rgba(60,25,40,.3);
 }
 
-/* ---------- PASSWORD ---------- */
+@media(max-width:600px){
+    #musicWidget{right:12px;bottom:12px}
+}
 
+/* PAROLA */
 #lockScreen{
     min-height:100vh;
     display:flex;
@@ -143,10 +144,7 @@ body{
     font-size:14px;
 }
 
-.password-row{
-    display:flex;
-    gap:8px;
-}
+.password-row{display:flex;gap:8px}
 
 .password-row input{
     min-width:0;
@@ -182,18 +180,195 @@ body{
     font-size:13px;
 }
 
-.credit{
-    margin-top:7px;
-    font-size:10px;
-    color:#9d7c88;
-}
-
-/* ---------- SITE ---------- */
-
-#site{
+/* PAGINA DE START */
+#home{
     display:none;
     min-height:100vh;
+    padding:28px 14px 22px;
+    text-align:center;
+    background:
+        radial-gradient(circle at 12% 15%,rgba(255,255,255,.7) 0 3px,transparent 4px),
+        linear-gradient(145deg,#f8b4c9,#f7d2de 52%,#fff0f5);
 }
+
+#home.show-home{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.home-title{
+    position:relative;
+    z-index:10;
+    margin:0 0 5px;
+    color:#a93660;
+    font-family:"Playfair Display",serif;
+    font-style:italic;
+    font-size:clamp(30px,6vw,46px);
+}
+
+.home-subtitle{
+    position:relative;
+    z-index:10;
+    margin:0 0 8px;
+    color:#825666;
+}
+
+.polaroid-wall{
+    position:relative;
+    width:min(1000px,100%);
+    height:clamp(500px,72vh,720px);
+    margin:0 auto 4px;
+}
+
+.polaroid{
+    position:absolute;
+    width:var(--size,180px);
+    margin:0;
+    padding:10px 10px 16px;
+    background:#fff;
+    box-shadow:0 12px 28px rgba(40,15,25,.28);
+    transform:rotate(var(--tilt));
+    z-index:var(--layer,1);
+    cursor:zoom-in;
+    transition:transform .3s ease,box-shadow .3s ease;
+}
+
+.polaroid:hover{
+    z-index:20;
+    transform:translateY(-5px) rotate(0deg) scale(1.04);
+    box-shadow:0 18px 38px rgba(40,15,25,.32);
+}
+
+.polaroid img{
+    display:block;
+    width:100%;
+    aspect-ratio:1/1;
+    object-fit:cover;
+    background:#f5dce5;
+}
+
+.polaroid figcaption{
+    padding-top:10px;
+    color:#76515e;
+    font-family:"Special Elite",monospace;
+    font-size:14px;
+}
+
+.polaroid:nth-child(5) img{aspect-ratio:4/3}
+
+/* Pozițiile, mărimile și suprapunerile fotografiilor */
+.polaroid:nth-child(1){left:5%;top:8%;--size:clamp(130px,19vw,210px);--tilt:-9deg;--layer:2}
+.polaroid:nth-child(2){left:28%;top:4%;--size:clamp(115px,16vw,175px);--tilt:7deg;--layer:1}
+.polaroid:nth-child(3){right:18%;top:7%;--size:clamp(140px,21vw,225px);--tilt:5deg;--layer:3}
+.polaroid:nth-child(4){left:12%;top:42%;--size:clamp(125px,18vw,195px);--tilt:6deg;--layer:4}
+.polaroid:nth-child(5){left:34%;top:34%;--size:clamp(235px,29vw,285px);--tilt:-5deg;--layer:5}
+.polaroid:nth-child(6){right:15%;top:43%;--size:clamp(120px,17vw,185px);--tilt:-8deg;--layer:2}
+.polaroid:nth-child(7){left:27%;bottom:2%;--size:clamp(115px,16vw,175px);--tilt:-7deg;--layer:3}
+.polaroid:nth-child(8){right:30%;bottom:0;--size:clamp(135px,19vw,205px);--tilt:8deg;--layer:4}
+.polaroid:nth-child(9){left:82%;top:30%;--size:clamp(105px,16vw,175px);--tilt:9deg;--layer:6}
+
+/* Mărirea unei fotografii la clic */
+.photo-zoom-backdrop{
+    position:fixed;
+    inset:0;
+    z-index:10000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background:rgba(43,20,31,.72);
+    backdrop-filter:blur(5px);
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .25s ease,visibility .25s ease;
+    cursor:zoom-out;
+}
+
+.photo-zoom-backdrop.open{
+    opacity:1;
+    visibility:visible;
+}
+
+.polaroid.zoomed{
+    position:relative;
+    inset:auto;
+    left:auto;
+    right:auto;
+    top:auto;
+    bottom:auto;
+    width:min(88vw,680px);
+    max-height:90vh;
+    padding:clamp(12px,2.5vw,24px) clamp(12px,2.5vw,24px) clamp(20px,4vw,42px);
+    transform:rotate(0deg) scale(1);
+    opacity:1;
+    z-index:1;
+    cursor:zoom-out;
+    animation:zoomPolaroidIn .3s cubic-bezier(.2,.8,.25,1) both;
+    box-shadow:0 25px 80px rgba(0,0,0,.4);
+}
+
+.polaroid.zoomed img{
+    width:100%;
+    max-height:72vh;
+    aspect-ratio:auto;
+    object-fit:contain;
+    background:#f5dce5;
+}
+
+.polaroid.zoomed figcaption{
+    font-size:clamp(16px,3vw,24px);
+    padding-top:clamp(12px,2vw,20px);
+}
+
+@keyframes zoomPolaroidIn{
+    from{opacity:.6;transform:scale(.82) rotate(-4deg)}
+    to{opacity:1;transform:scale(1) rotate(0deg)}
+}
+
+.typewriter{
+    position:relative;
+    z-index:10;
+    min-height:1.5em;
+    margin:0 0 12px;
+    color:#9f3159;
+    font-family:"Special Elite",monospace;
+    font-size:clamp(28px,7vw,48px);
+    text-shadow:0 1px 3px rgba(255,255,255,.8);
+}
+
+
+.typewriter::after{
+    content:"";
+    display:inline-block;
+    height:.9em;
+    margin-left:5px;
+    border-right:2px solid currentColor;
+    vertical-align:-.08em;
+    animation:cursorBlink .8s steps(2,start) infinite;
+}
+
+@keyframes cursorBlink{to{visibility:hidden}}
+
+.enter-button{
+    position:relative;
+    z-index:10;
+    border:0;
+    border-radius:999px;
+    padding:13px 24px;
+    background:#d94f7c;
+    color:white;
+    font:700 16px "DM Sans",sans-serif;
+    cursor:pointer;
+    box-shadow:0 9px 22px rgba(119,53,76,.18);
+    transition:transform .2s ease;
+}
+
+.enter-button:hover{transform:translateY(-2px)}
+
+/* SITE */
+#site{display:none;min-height:100vh}
 
 .top{
     padding:32px 18px 18px;
@@ -208,10 +383,7 @@ body{
     font-size:clamp(34px,7vw,52px);
 }
 
-.top p{
-    margin:5px 0 0;
-    color:#825666;
-}
+.top p{margin:5px 0 0;color:#825666}
 
 .tabs{
     display:flex;
@@ -280,10 +452,7 @@ h2{
     font-size:32px;
 }
 
-.letter p{
-    line-height:1.8;
-    margin:12px 0;
-}
+.letter p{line-height:1.8;margin:12px 0}
 
 .signature{
     margin-top:24px;
@@ -309,11 +478,7 @@ h2{
     transform:rotate(var(--r));
 }
 
-.note strong{
-    display:block;
-    margin-bottom:8px;
-    color:#bd456e;
-}
+.note strong{display:block;margin-bottom:8px;color:#bd456e}
 
 .music-box{
     text-align:center;
@@ -322,10 +487,7 @@ h2{
     background:linear-gradient(135deg,#fff2f7,#fce1eb);
 }
 
-.music-icon{
-    font-size:55px;
-    margin-bottom:10px;
-}
+.music-icon{font-size:55px;margin-bottom:10px}
 
 .music-box a{
     display:inline-block;
@@ -362,8 +524,8 @@ h2{
 .memory:nth-child(2){background:linear-gradient(145deg,#fff0a9,#f9c2d7)}
 .memory:nth-child(3){background:linear-gradient(145deg,#d9f4e7,#f4b6cb)}
 .memory:nth-child(4){background:linear-gradient(145deg,#e9ddff,#f7bfd4)}
-
 .memory .big{font-size:45px}
+
 .memory span{
     font-weight:700;
     color:#713b4f;
@@ -377,11 +539,148 @@ h2{
     font-size:12px;
 }
 
-@media(max-width:500px){
+/* Scrisori cu efect de răsfoire */
+.book{
+    width:min(780px,100%);
+    margin:0 auto;
+    perspective:1400px;
+}
+
+.book-page{
+    display:none;
+    position:relative;
+    min-height:560px;
+    padding:clamp(24px,5vw,48px);
+    padding-bottom:76px;
+    border:1px solid #f0d4dc;
+    border-radius:8px 24px 24px 8px;
+    background:
+        linear-gradient(90deg,rgba(195,133,151,.12),transparent 22px),
+        linear-gradient(180deg,#fffefa,#fff8f3);
+    box-shadow:0 18px 45px rgba(89,46,61,.17);
+    transform-origin:left center;
+}
+
+.book-page.active{
+    display:block;
+    animation:turnPage .45s ease both;
+}
+
+@keyframes turnPage{
+    from{opacity:.5;transform:rotateY(-10deg)}
+    to{opacity:1;transform:rotateY(0)}
+}
+
+.book-page .letter-text p{
+    line-height:1.85;
+    margin:14px 0;
+}
+
+.old-letter-date{
+    position:absolute;
+    top:22px;
+    right:clamp(24px,5vw,48px);
+    color:#9b7881;
+    font-family:"Special Elite",monospace;
+    font-size:14px;
+}
+
+.book-page .eyebrow{margin-top:18px}
+
+.page-arrow{
+    position:absolute;
+    top:50%;
+    width:44px;
+    height:44px;
+    border:0;
+    border-radius:50%;
+    background:#d94f7c;
+    color:#fff;
+    font-size:26px;
+    line-height:1;
+    cursor:pointer;
+    box-shadow:0 6px 16px rgba(119,53,76,.22);
+    transition:transform .2s ease,background .2s ease;
+}
+
+.page-arrow:hover{
+    transform:scale(1.1);
+    background:#bd3f69;
+}
+
+.next-arrow{right:14px}
+.prev-arrow{left:14px}
+
+@media(max-width:600px){
+    .book-page{
+        min-height:0;
+        padding:28px 24px 78px;
+    }
+
+    .book-page .letter-text p{
+        font-size:15px;
+        line-height:1.75;
+    }
+
+    .old-letter-date{
+        top:12px;
+        right:20px;
+        font-size:12px;
+    }
+
+    .page-arrow{
+        top:auto;
+        bottom:16px;
+        width:42px;
+        height:42px;
+    }
+
+    .next-arrow{right:16px}
+    .prev-arrow{left:16px}
+}
+
+@media(max-width:600px){
     .lock-card{min-height:600px}
     .password-row{flex-direction:column}
     .password-row button{padding:14px}
     .main{width:94vw}
+
+    #home{
+        min-height:100svh;
+        padding:20px 8px 18px;
+    }
+
+    .home-subtitle{margin-bottom:0}
+
+    .polaroid-wall{
+        height:clamp(490px,68svh,610px);
+        width:100%;
+    }
+
+    .polaroid{padding:7px 7px 12px}
+    .polaroid figcaption{padding-top:7px;font-size:12px}
+
+    .polaroid:nth-child(1){left:1%;top:4%;--size:clamp(105px,34vw,155px)}
+    .polaroid:nth-child(2){left:34%;top:0;--size:clamp(95px,30vw,140px)}
+    .polaroid:nth-child(3){right:0;top:19%;--size:clamp(110px,35vw,160px)}
+    .polaroid:nth-child(4){left:0;top:39%;--size:clamp(105px,33vw,150px)}
+    .polaroid:nth-child(5){left:27%;top:27%;--size:clamp(125px,39vw,180px)}
+    .polaroid:nth-child(6){right:0;top:53%;--size:clamp(100px,31vw,145px)}
+    .polaroid:nth-child(7){left:10%;bottom:0;--size:clamp(95px,30vw,140px)}
+    .polaroid:nth-child(8){right:12%;bottom:0;--size:clamp(110px,34vw,155px)}
+    .polaroid:nth-child(9){left:88%;top:73%;--size:clamp(95px,29vw,135px)}
+
+    .typewriter{font-size:clamp(27px,8vw,42px);margin-bottom:10px}
+    .enter-button{font-size:14px;padding:12px 20px}
+}
+
+@media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+        scroll-behavior:auto !important;
+        animation-duration:.01ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:.01ms !important;
+    }
 }
 </style>
 </head>
@@ -405,6 +704,64 @@ h2{
     </div>
 </section>
 
+<!-- PAGINA DE START -->
+<section id="home">
+    <h1 class="home-title">Pentru Bianca 🌷</h1>
+    <p class="home-subtitle">câteva amintiri mici, dar tare dragi</p>
+
+    <div class="polaroid-wall">
+        <figure class="polaroid" onclick="openPhoto(this)" role="button" tabindex="0" aria-label="Mărește fotografia: noi">
+            <img src="c.jpg" alt="Amintire 1">
+            <figcaption>noi ♡</figcaption>
+        </figure>
+
+        <figure class="polaroid" onclick="openPhoto(this)" role="button" tabindex="0" aria-label="Mărește fotografia: Ziggy">
+            <img src="ziggy.jpeg" alt="Amintire 2">
+            <figcaption>Ziggy</figcaption>
+        </figure>
+
+        <figure class="polaroid" onclick="openPhoto(this)" role="button" tabindex="0" aria-label="Mărește fotografia: A VI-a întâlnire">
+            <img src="3.jpg" alt="Amintire 3">
+            <figcaption>A VI-a întâlnire ♡</figcaption>
+        </figure>
+
+        <figure class="polaroid" onclick="openPhoto(this)" role="button" tabindex="0" aria-label="Mărește fotografia: Prima întâlnire">
+            <img src="1.jpg" alt="Amintire 4">
+            <figcaption>Prima întâlnire ♡</figcaption>
+        </figure>
+
+        <figure class="polaroid" onclick="openPhoto(this)" role="button" tabindex="0" aria-label="Mărește fotografia: preferata mea">
+            <img src="1234.jpeg" alt="Amintire 5">
+            <figcaption>preferata mea</figcaption>
+        </figure>
+
+        <figure class="polaroid" onclick="openPhoto(this)" role="button" tabindex="0" aria-label="Mărește fotografia: I remember that">
+            <img src="y.jpg" alt="Amintire 6">
+            <figcaption>I remember that.</figcaption>
+        </figure>
+
+        <figure class="polaroid" onclick="openPhoto(this)" role="button" tabindex="0" aria-label="Mărește fotografia: Te iubesc">
+            <img src="x.jpeg" alt="Amintire 7">
+            <figcaption>Te Iubeeeesc ♡</figcaption>
+        </figure>
+
+        <figure class="polaroid" onclick="openPhoto(this)" role="button" tabindex="0" aria-label="Mărește fotografia: A III-a întâlnire">
+            <img src="2.jpg" alt="Amintire 8">
+            <figcaption>A III-a întâlnire ♡</figcaption>
+        </figure>
+        <figure class="polaroid" onclick="openPhoto(this)" role="button" tabindex="0" aria-label="Mărește fotografia: amintire nouă">
+            <img src="e.jpeg" alt="Amintire 9">
+            <figcaption>o amintire dragă ♡</figcaption>
+        </figure>
+    </div>
+
+    <p class="typewriter" id="typewriter"><span id="typedText"></span></p>
+    <button class="enter-button" onclick="enterSite()">Intră în micul nostru loc ✨</button>
+</section>
+
+<!-- Fundalul pentru fotografia mărită -->
+<div class="photo-zoom-backdrop" id="photoZoomBackdrop" aria-label="Închide fotografia mărită"></div>
+
 <!-- SITE -->
 <section id="site">
 
@@ -414,7 +771,7 @@ h2{
     </header>
 
     <nav class="tabs">
-        <button class="tab active" onclick="showTab('letter',this)">💌 For You </button>
+        <button class="tab active" onclick="showTab('letter',this)">💌 For You</button>
         <button class="tab" onclick="showTab('music',this)">🎵 Music</button>
         <button class="tab" onclick="showTab('notes',this)">📝 Notes</button>
         <button class="tab" onclick="showTab('gallery',this)">🦋 Little Things</button>
@@ -423,42 +780,126 @@ h2{
     <main class="main">
 
         <section id="letter" class="panel active">
-            <div class="letter">
-                <div class="eyebrow">pentru tine</div>
-                <h2>Dragă Bia,</h2>
+            <div class="book">
 
-                <p>
-                    Nu știu exact cum să pun în cuvinte tot ce simt pentru tine.
-					Știu doar că, undeva pe parcursul acestor luni, ai ajuns să 
-					ocupi un loc în sufletul meu pe care nu mă așteptam
-					să îl ocupe cineva atât de repede.
-                </p>
+                <!-- Scrisoarea nouă -->
+                <article class="book-page active" id="newLetter">
+				<div class="old-letter-date">24 Septembrie 2026</div>
+                    <div class="eyebrow">pentru tine</div>
+                    <h2>Draga mea Bia,</h2>
 
-                <p>
-                    Îmi plac toate lucrurile pe care le-am trăit împreună, dar poate și mai mult îmi plac cele mici.
-					Mesajele de dimineață. Nopțile în care spunem că nu avem nimic de vorbit dar totuși ne e dor unul de celalt și ajungem să stăm sa vorbim și câteva ore.
-					TikTok-urile trimise. Pozele super cutee. Fluttershy. Privitul cerului înstelat. Micile glumițe. Felul în care ne tachinăm. Și chiar și mâna mea care tremura când încercam să fac prima poză 😅.
-					Faptul că ai făcut mini ScrapBook-ul acela pentru mineee 🥹 Chiar a însemnat foarte mult . Mulțumesc Biaa 😘
-                </p>
+                    <div class="letter-text">
+                        <p>
+                            Cred că o sa incep prin a-ți spune că imi este foaaaarte dor de tineee 😭. A trecut o săptămână de la
+							ultima noastră întâlnire și să știi că se simte. Îmi este foarte dor de vocea taaa, să te văd, să glumim, să ne povestim chestiii 😭 și să interacționăm în timp real.
+					
+                        </p>
 
-                <p>
-                    Și cred că tocmai toate lucrurile astea m-au făcut să realizez cât de mult ai ajuns să însemni pentru mine.
-                </p>
-				
-				<p>
-					Nu vreau să grăbesc nimic și nu vreau să pun nicio presiune pe tine.
-					Vreau doar să știi că ceea ce simt este sincer.
-					Îmi place enorm omul care ești și îmi place omul care sunt eu când sunt alături de tine.
-				</p>
+                        <p>
+                            Îmi place că totuși vorbim mereu prin mesaje.. mesajele sunt okkkki.. însă simt că lipsește acea interacțiune reală sau măcar 
+							dinamică.. știi la ce mă refer. Ar fi fain ca ocazional poate.. doar zic și eu ce simt și ce părere am eu.. dar ar fi frumos să ne mai sunăm uneori. 
+                        </p>
 
-                <p>
-                    Și, dacă te întrebi ce îmi doresc pentru noi, cred că răspunsul cel mai sincer este simplu:
-					aș vrea să continuăm. Să ne mai întâlnim, sa facem mai multe poze împreună, sa mai jucăm diverse joculețe, îmbrățișări,
-					seri lungi și toate lucrurile mici care ne-au adus până aici.
-					Și să vedem unde ne duce tot ceea ce construim acum.
-                </p>
+                        <p>
+							Știuuu.. nu vreau să par insistent.. să te forțez să faci ceva ce poate nu vrei .. dar mă gândeam că poate dacă tot incepe facultatea
+							și noi ne vedem mai rar.. ar fi mers măcar să mai vorbim așa. Pentru că eu chiar resimt foarte puternic acest dor. Și mă intristează teribil..
+							și ma face să plâng 😭 Parcă mă doare cumva sufletul că îmi lipsești așa tareeeeeee 😭 Biaa, chiar ești o persoana minunată și ai pătruns așa 
+							adânc în suflețelul și inima mea. Nu am crezut vreodată că așa de frumos se simte să iubești și totuți să fie așa dureros să îți fie dor de persoana iubită 🥹
+						</p>
+						<p>
+							Iubita mea frumoasăăă și minunată, cu lacrimi în ochi, îți spun că Te Iubeeeesc din tot suflețelul meu 💗
+                        </p>
+						
+						<p>
+							Sorry Bia pentru că simt așa muuult.. dar nu prea am ce face așa sunt eu.. știi și tu că sunt profund. Dar să știi că dacă nu ești confortabilă
+							și nu vrei sa faci asta, eu nu te oblig. Doar că parcă ar fi mers acest pas.. zic eu.
+							M-am atașat enorm de tinee și parcă mă simt pedepsit că nu am putea vorbi.. să interacționăm și altfel decât prin mesaje.. și trebuie doar să aștept până
+							ne vedem următoarea dată..
+						
+                        </p>
+						
+                        <p>
+							Și sunt și puțin nervos că am răcit.. offf 🙃 era fain să ne mai vedem o dată până să inceapă facultatea.. măcar atât ..și aveam și ceva interesant în plan..
+							dar nu e nimic.. asta este. Nu știu de acum când o să ne mai vedem.. chiar nu știu Biaaa .. dar un lucru știu.. nu te voi uita.. îmi va fi dor .. foarte dooor..
+							o sa mai vorbim noi ca de obicei cred.. dar o sa simt dor . un dor teribil însă mai bine să am cui să îi duc dorul decât sa nu am pe nimeni.
+                        </p>
+						
+						<p>
+                            Îți mulțumesc pentru toate momentele frumoase și pentru felul în care îmi faci zilele mele mai speciale. Și vreau să îți mai spun că am avut o vară minunată și mă bucur că am petrecut-o cu tine 🥹
+							Ești cea mai specială și importantă din viața mea, Biaa. Sper să mai avem multe momente frumoase împreună. Vol U 💗
+							Și vreau să îți spun că ești o iubită superbă, ești cea mai minunatăăă și frumoasăăă și chiută. You are my whole world. Și abia aștept să te mai țin de mânuță 🥹💗 I Love You, My FLUTTERSHY 💗
+                        </p>
+                    </div>
 
-                <div class="signature">cu drag, Vlad ♡</div>
+                    <div class="signature">din toată inima, al tău Vlăduț ♡</div>
+
+                    <button class="page-arrow next-arrow"
+                            onclick="showLetterPage('oldLetter')"
+                            aria-label="Răsfoiește la scrisoarea veche">
+                        →
+                    </button>
+                </article>
+
+                <!-- Scrisoarea veche -->
+                <article class="book-page" id="oldLetter">
+                    <div class="old-letter-date">9 August 2026</div>
+                    <div class="eyebrow">scrisoarea de atunci</div>
+                    <h2>Dragă Bia,</h2>
+
+                    <div class="letter-text">
+                        <p>
+                            Nu știu exact cum să pun în cuvinte tot ce simt pentru tine.
+                            Știu doar că, undeva pe parcursul acestor luni, ai ajuns să
+                            ocupi un loc în sufletul meu pe care nu mă așteptam
+                            să îl ocupe cineva atât de repede.
+                        </p>
+
+                        <p>
+                            Îmi plac toate lucrurile pe care le-am trăit împreună, dar poate
+                            și mai mult îmi plac cele mici. Mesajele de dimineață. Nopțile
+                            în care spunem că nu avem nimic de vorbit, dar totuși ne e dor
+                            unul de celălalt și ajungem să stăm să vorbim câteva ore.
+                            TikTok-urile trimise. Pozele super cutee. Fluttershy. Privitul
+                            cerului înstelat. Micile glumițe. Felul în care ne tachinăm.
+                            Și chiar și mâna mea care tremura când încercam să fac prima
+                            poză 😅.
+                        </p>
+
+                        <p>
+                            Faptul că ai făcut mini ScrapBook-ul acela pentru mineee 🥹
+                            chiar a însemnat foarte mult. Mulțumesc, Biaa 😘
+                        </p>
+
+                        <p>
+                            Și cred că tocmai toate lucrurile astea m-au făcut să realizez
+                            cât de mult ai ajuns să însemni pentru mine.
+                        </p>
+
+                        <p>
+                            Nu vreau să grăbesc nimic și nu vreau să pun nicio presiune pe
+                            tine. Vreau doar să știi că ceea ce simt este sincer. Îmi place
+                            enorm omul care ești și îmi place omul care sunt eu când sunt
+                            alături de tine.
+                        </p>
+
+                        <p>
+                            Și, dacă te întrebi ce îmi doresc pentru noi, cred că răspunsul
+                            cel mai sincer este simplu: aș vrea să continuăm. Să ne mai
+                            întâlnim, să facem mai multe poze împreună, să mai jucăm diverse
+                            joculețe, să avem îmbrățișări, seri lungi și toate lucrurile
+                            mici care ne-au adus până aici. Și să vedem unde ne duce tot
+                            ceea ce construim acum.
+                        </p>
+                    </div>
+
+                    <div class="signature">cu drag, Vlad ♡</div>
+
+                    <button class="page-arrow prev-arrow"
+                            onclick="showLetterPage('newLetter')"
+                            aria-label="Întoarce-te la scrisoarea nouă">
+                        ←
+                    </button>
+                </article>
             </div>
         </section>
 
@@ -467,11 +908,9 @@ h2{
                 <div class="music-icon">🎧💗</div>
                 <h2>I Love Your Eyes 😍</h2>
                 <p>
-                    Aceasta melodie descrie puțin din ce simt eu pentru tinee, Biaa. Și când o ascult simt entuziasm si mă face să zâmbesc. O senzație asemănătoare cu cea pe care o simt când ne întâlnim .
+                    Această melodie descrie puțin din ce simt eu pentru tine, Biaa. Și când o ascult simt entuziasm și mă face să zâmbesc. O senzație asemănătoare cu cea pe care o simt când ne întâlnim.
                 </p>
-
-                
-                <a href="https://www.youtube.com/watch?v=HxznsS77k6s&list=RDHxznsS77k6s&start_radio=1"
+                <a href="https://www.youtube.com/watch?v=HxznsS77k6s&amp;list=RDHxznsS77k6s&amp;start_radio=1"
                    target="_blank" rel="noopener">
                     ▶ Deschide melodia
                 </a>
@@ -501,18 +940,17 @@ h2{
                     <strong>04 · important</strong>
                     Dacă ai avut o zi proastă, vino aici și mai citește o dată.
                 </div>
-				
-				<div class="note" style="--r:-2deg">
+
+                <div class="note" style="--r:-2deg">
                     <strong>05 · little reminder</strong>
                     Nu trebuie să fii mereu într-o zi bună ca să meriți să fii iubită, ascultată și apreciată.
                 </div>
-				
-				<div class="note" style="--r:1deg">
+
+                <div class="note" style="--r:1deg">
                     <strong>06 · future</strong>
                     Sper să mai adăugăm multe lucruri aici. Nu doar amintiri, ci și momente pe care încă niciunul dintre noi nu le-a trăit.
-					Ar fi faină și o secțiune cu pozeee 🥰.
+                    Ar fi faină și o secțiune cu pozeee 🥰.
                 </div>
-				
             </div>
         </section>
 
@@ -557,15 +995,19 @@ h2{
 const PAROLA = "fluttershy";
 let incercari = 0;
 
+const mesajStart = "I love you soo muchhhh, Bia ♡";
+let litera = 0;
+
+
 function unlock(){
     const input = document.getElementById("password");
     const error = document.getElementById("error");
-
     const parolaIntrodusa = input.value.trim().toLowerCase();
 
     if(parolaIntrodusa === PAROLA.toLowerCase()){
         document.getElementById("lockScreen").style.display = "none";
-        document.getElementById("site").style.display = "block";
+        document.getElementById("home").classList.add("show-home");
+        startTyping();
         window.scrollTo(0,0);
     }else{
         incercari++;
@@ -576,14 +1018,12 @@ function unlock(){
                 <strong>FLUTTERSHY.</strong><br>
                 Serios acum, Biaa :) 😭
             `;
-        }
-        else if(incercari >= 3){
+        }else if(incercari >= 3){
             error.innerHTML = `
                 🦋 <strong>Hint unlocked!</strong><br>
                 <em>„Uneori răspunsul e chiar în fața ochilor tăi...”</em> 👀
             `;
-        }
-        else{
+        }else{
             error.textContent = `Parolă greșită 💗 (${incercari}/3)`;
         }
 
@@ -591,12 +1031,86 @@ function unlock(){
     }
 }
 
-document.getElementById("password").addEventListener("keydown", function(e){
+function startTyping(){
+    const tinta = document.getElementById("typedText");
+    const typewriter = document.getElementById("typewriter");
+    tinta.textContent = "";
+    litera = 0;
+    typewriter.classList.add("ready");
+
+    function scrie(){
+        if(litera < mesajStart.length){
+            tinta.textContent += mesajStart.charAt(litera);
+            litera++;
+            setTimeout(scrie,110);
+        }
+    }
+
+    scrie();
+}
+
+function openPhoto(photo){
+    if(photo.classList.contains("zoomed")){
+        closePhoto();
+        return;
+    }
+
+    const backdrop = document.getElementById("photoZoomBackdrop");
+    const wall = document.querySelector(".polaroid-wall");
+
+    // Păstrează spațiul original al fotografiei în aranjament.
+    photo.dataset.originalParent = "polaroid-wall";
+    photo.dataset.originalIndex = Array.from(wall.children).indexOf(photo);
+    photo.classList.add("zoomed");
+    backdrop.appendChild(photo);
+    backdrop.classList.add("open");
+    document.body.classList.add("photo-zoom-open");
+}
+
+function closePhoto(){
+    const backdrop = document.getElementById("photoZoomBackdrop");
+    const photo = backdrop.querySelector(".polaroid.zoomed");
+
+    if(!photo) return;
+
+    const wall = document.querySelector(".polaroid-wall");
+    const originalIndex = Number(photo.dataset.originalIndex);
+    const beforeNode = wall.children[originalIndex] || null;
+
+    photo.classList.remove("zoomed");
+    wall.insertBefore(photo,beforeNode);
+    backdrop.classList.remove("open");
+    document.body.classList.remove("photo-zoom-open");
+}
+
+document.getElementById("photoZoomBackdrop").addEventListener("click",closePhoto);
+
+document.querySelectorAll(".polaroid").forEach(function(photo){
+    photo.addEventListener("keydown",function(event){
+        if(event.key === "Enter" || event.key === " "){
+            event.preventDefault();
+            openPhoto(photo);
+        }
+    });
+});
+
+document.addEventListener("keydown",function(event){
+    if(event.key === "Escape"){
+        closePhoto();
+    }
+});
+
+function enterSite(){
+    document.getElementById("home").style.display = "none";
+    document.getElementById("site").style.display = "block";
+    window.scrollTo(0,0);
+}
+
+document.getElementById("password").addEventListener("keydown",function(e){
     if(e.key === "Enter") unlock();
 });
 
-function showTab(id, button){
-
+function showTab(id,button){
     document.querySelectorAll(".panel").forEach(function(panel){
         panel.classList.remove("active");
     });
@@ -608,8 +1122,6 @@ function showTab(id, button){
     document.getElementById(id).classList.add("active");
     button.classList.add("active");
 
-
-    // Arată poza doar pe Little Things
     const memory = document.querySelector(".phone-memory");
 
     if(id === "gallery"){
@@ -619,9 +1131,70 @@ function showTab(id, button){
     }
 }
 
+function showLetterPage(pageId){
+    document.querySelectorAll(".book-page").forEach(function(page){
+        page.classList.remove("active");
+    });
+
+    document.getElementById(pageId).classList.add("active");
+}
+
+let musicPlayer;
+let musicIsPlaying = false;
+
+function onYouTubeIframeAPIReady(){
+    musicPlayer = new YT.Player("ytPlayer",{
+        width:"200",
+        height:"200",
+        videoId:"t_cfsFclNGk",
+        playerVars:{
+            autoplay:0,
+            controls:0,
+            playsinline:1,
+            loop:1,
+            playlist:"t_cfsFclNGk",
+            origin:"https://vladuttzu14.github.io"
+        },
+        events:{
+            onStateChange:function(event){
+                if(event.data === YT.PlayerState.ENDED){
+                    musicPlayer.playVideo();
+                }
+            }
+        }
+    });
+}
+
+async function toggleMusic(){
+    const music = document.getElementById("siteMusic");
+    const button = document.getElementById("musicToggle");
+
+    if(music.paused){
+        try{
+            await music.play();
+            button.textContent = "🔊";
+            button.setAttribute("aria-label","Oprește muzica");
+        }catch(error){
+            button.textContent = "⚠️";
+            button.setAttribute("aria-label","Nu s-a putut porni melodia");
+        }
+    }else{
+        music.pause();
+        button.textContent = "🔇";
+        button.setAttribute("aria-label","Pornește muzica");
+    }
+}
 </script>
-	<div class="phone-memory">
+
+<div class="phone-memory">
     <img src="DSC00532.JPG" alt="O amintire cu noi">
 </div>
+
+<audio id="siteMusic" src="melodie.mp3" loop preload="auto"></audio>
+<button id="musicToggle" onclick="toggleMusic()" aria-label="Pornește muzica">🔇</button>
+
 </body>
 </html>
+
+
+
