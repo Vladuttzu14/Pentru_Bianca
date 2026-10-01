@@ -470,13 +470,28 @@ h2{
 }
 
 .note{
+    position:relative;
     padding:21px;
+    padding-top:28px;
     min-height:135px;
     border-radius:22px;
     background:#fff5f8;
     border:1px solid #f3cfdb;
     transform:rotate(var(--r));
 }
+
+.note-date{
+    position:absolute;
+    top:9px;
+    right:13px;
+
+    color:#b94b70;
+    font-family:"Special Elite",monospace;
+    font-size:9px;
+    font-weight:400;
+    opacity:.8;
+}
+
 
 .note strong{display:block;margin-bottom:8px;color:#bd456e}
 
@@ -682,6 +697,89 @@ h2{
         transition-duration:.01ms !important;
     }
 }
+
+.notes-tab{
+    position:relative;
+    overflow:visible;
+}
+
+.new-badge{
+    position:absolute;
+    top:-13px;
+    right:-10px;
+
+    padding:4px 9px;
+    border-radius:8px;
+
+    background:#d94f7c;
+    color:white;
+
+    font-family:"DM Sans",sans-serif;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.7px;
+
+    box-shadow:
+        0 4px 10px rgba(119,53,76,.22),
+        0 0 0 3px rgba(255,255,255,.9);
+
+    transform:rotate(12deg);
+    z-index:10;
+
+    animation:newBadge 2s ease-in-out infinite;
+}
+
+@keyframes newBadge{
+    0%,100%{
+        transform:rotate(12deg) scale(1);
+    }
+
+    50%{
+        transform:rotate(12deg) scale(1.08);
+    }
+}
+
+.notes-tab{
+    position:relative;
+    overflow:visible;
+}
+
+.new-badge{
+    position:absolute;
+    top:-13px;
+    right:-10px;
+
+    padding:4px 9px;
+    border-radius:8px;
+
+    background:#d94f7c;
+    color:white;
+
+    font-family:"DM Sans",sans-serif;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.7px;
+
+    box-shadow:
+        0 4px 10px rgba(119,53,76,.22),
+        0 0 0 3px rgba(255,255,255,.9);
+
+    transform:rotate(12deg);
+    z-index:10;
+
+    animation:newBadge 2s ease-in-out infinite;
+}
+
+@keyframes newBadge{
+    0%,100%{
+        transform:rotate(12deg) scale(1);
+    }
+
+    50%{
+        transform:rotate(12deg) scale(1.08);
+    }
+}
+
 </style>
 </head>
 
@@ -773,7 +871,11 @@ h2{
     <nav class="tabs">
         <button class="tab active" onclick="showTab('letter',this)">💌 For You</button>
         <button class="tab" onclick="showTab('music',this)">🎵 Music</button>
-        <button class="tab" onclick="showTab('notes',this)">📝 Notes</button>
+        <button class="tab notes-tab" onclick="showTab('notes',this)">
+    📝 Notes
+    <span class="new-badge">NEW ✨</span>
+</button>
+
         <button class="tab" onclick="showTab('gallery',this)">🦋 Little Things</button>
     </nav>
 
@@ -922,34 +1024,66 @@ h2{
 
             <div class="note-grid">
                 <div class="note" style="--r:-1deg">
+					<span class="note-date">9 August 2026</span>
                     <strong>01 · reminder</strong>
                     Ești mai importantă pentru mine decât îți spun uneori.
                 </div>
 
                 <div class="note" style="--r:1deg">
+				<span class="note-date">9 August 2026</span>
                     <strong>02 · secret</strong>
                     Da, am făcut site-ul ăsta special pentru tine. 🤭
                 </div>
 
                 <div class="note" style="--r:-2deg">
+				<span class="note-date">9 August 2026</span>
                     <strong>03 · promise</strong>
                     Nu trebuie să avem poze perfecte ca să avem amintiri frumoase.
                 </div>
 
                 <div class="note" style="--r:2deg">
+				<span class="note-date">9 August 2026</span>
                     <strong>04 · important</strong>
                     Dacă ai avut o zi proastă, vino aici și mai citește o dată.
                 </div>
 
                 <div class="note" style="--r:-2deg">
+				<span class="note-date">9 August 2026</span>
                     <strong>05 · little reminder</strong>
                     Nu trebuie să fii mereu într-o zi bună ca să meriți să fii iubită, ascultată și apreciată.
                 </div>
 
                 <div class="note" style="--r:1deg">
+				<span class="note-date">9 August 2026</span>
                     <strong>06 · future</strong>
                     Sper să mai adăugăm multe lucruri aici. Nu doar amintiri, ci și momente pe care încă niciunul dintre noi nu le-a trăit.
                     Ar fi faină și o secțiune cu pozeee 🥰.
+                </div>
+				
+				<div class="note" style="--r:-1deg">
+				<span class="note-date">1 Octombrie 2026</span>
+                    <strong>07 · Dorință </strong>
+                    <p> Acum că a început și facultatea îmi doresc ca amândoi să avem un an universitar bun, și să fie unul frumos, că noi suntem deja frumoși amândoooooi ♡ </p>
+					<p>	Și	mai sper ca în continuare să ne fim aproape unul celuilalt și să trecem împreună și prin acest an. </p>
+					<p> Te iubesc, My FLUTTERSHY 💗 </p>
+                </div>
+				
+				<div class="note" style="--r:2deg">
+				<span class="note-date">1 Octombrie 2026</span>
+                    <strong>08 · Dor de tine ♡</strong>
+                    <p> Draga mea, Biaa... îmi este dor de tine..îmi e dor de ochișorii tăi frumooooși.. să îi privesc. Îmi e dor de mânuțele taleee.. vreau să te țin de mânuțe..îmi e dooor. Îmi mai e dor de fățuca ta frumoasăăă și
+					drăguțăăăă. Îmi este dor de vocea ta calmă și liniștitoaree.. e așa plăcut să te aud vorbind Biaaa.. de ai ști.. </p>
+					<p>Îmi e dor de prezența taaa.. să stau lângă tine.. să stăm apropiați.. să te strâng în brațeeee. </p>
+					<p> Abia aștept să ne revedem. Vol U 💗 </p>
+                </div>
+				
+				<div class="note" style="--r:1deg">
+				<span class="note-date">1 Octombrie 2026</span>
+                    <strong>09 · Te Iubesc ♡</strong>
+                    <p> Biaaa îmi ești foarte dragă. Ești persoana mea preferată și te iubesc enorm. Nu pot exprima în cuvinte ce simt. Dar vreau să știi că
+					ești cel mai frumos și minunat lucru care mi s-a întâmplat.</p>
+					<p> Mă bucur că exiști în viața mea. Ești o persoana minunata. Ești WOOOOW.</p>
+					<p> Te iubeeesc, frumoasa și draga mea iubită ♡ </p>
                 </div>
             </div>
         </section>
