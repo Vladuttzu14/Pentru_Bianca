@@ -857,6 +857,21 @@ h2{
     #photos .photos-heading{min-height:65vh}
 }
 
+
+/* SCRISOAREA BIEI — editor cu salvare online prin Supabase Edge Function */
+.bia-letter-wrap{max-width:760px;margin:0 auto}
+.bia-letter-paper{border:1px solid #f0cfda;border-radius:22px;padding:clamp(20px,4vw,36px);background:linear-gradient(180deg,#fffefa,#fff5f8);box-shadow:0 12px 30px rgba(119,53,76,.08)}
+.bia-letter-label{display:block;margin:12px 0 6px;font-weight:700;color:#a43a61}
+.bia-letter-input,.bia-letter-editor{width:100%;border:1px solid #e8b7c8;border-radius:12px;padding:13px 14px;background:#fff;color:#5b3342;font:inherit;outline:none}
+.bia-letter-input:focus,.bia-letter-editor:focus{border-color:#d94f7c;box-shadow:0 0 0 3px rgba(217,79,124,.12)}
+.bia-letter-editor{min-height:300px;resize:vertical;line-height:1.8;white-space:pre-wrap}
+.bia-letter-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
+.bia-letter-btn{border:0;border-radius:999px;padding:12px 18px;background:#d94f7c;color:white;font-weight:700;cursor:pointer}
+.bia-letter-btn.secondary{background:#fff;color:#a43a61;border:1px solid #e8b7c8}
+.bia-letter-status{min-height:22px;margin:12px 0 0;font-size:13px;color:#8c6572}
+.bia-letter-private-note{font-size:13px;color:#8c6572;line-height:1.65;margin-top:14px}
+@media(max-width:600px){.bia-letter-editor{min-height:240px}.bia-letter-btn{flex:1}}
+
 </style>
 </head>
 
@@ -953,11 +968,12 @@ h2{
     <!--<span class="new-badge">NEW ✨</span>-->
 </button>
         <button class="tab notes-tab" onclick="showTab('photos',this)">
-    📸 Fotografii
-    <span class="new-badge">NEW ✨</span>
+    📸 Photos
+    <!-- <span class="new-badge">NEW ✨</span> -->
 </button>
 
-        <button class="tab notes-tab" onclick="showTab('gallery',this)">🦋 Little Things <span class="new-badge">NEW ✨</span></button>
+        <button class="tab notes-tab" onclick="showTab('gallery',this)">🦋 Little Things <!-- <span class="new-badge">NEW ✨</span> --> </button>
+        <button class="tab notes-tab" onclick="showTab('biaLetter',this)">💌 From Bia <span class="new-badge">NEW ✨</span></button>
     </nav>
 
     <main class="main">
@@ -1200,6 +1216,34 @@ h2{
             </div>
         </section>
 	
+
+        <section id="biaLetter" class="panel">
+            <div class="bia-letter-wrap">
+                <div class="bia-letter-paper">
+                    <div class="eyebrow">Be creative, my Fluttershy 🦋</div>
+                    <h2>From Bia 💗</h2>
+                    <p>Un loc în care poți scrie ce ai pe suflet și îmi poți povesti orice vrei și să rămână o mică amintire. Scrisoarea se salvează online și o poți modifica oricând.</p>
+                    <div id="biaLetterAccess">
+                        <label class="bia-letter-label" for="biaLetterCode">Codul secret</label>
+                        <input class="bia-letter-input" id="biaLetterCode" type="password" autocomplete="current-password" placeholder="Scrie codul secret…">
+                        <div class="bia-letter-actions"><button class="bia-letter-btn" type="button" onclick="openBiaLetter()">Deschide scrisoarea 💌</button></div>
+                    </div>
+                    <div id="biaLetterEditorArea" hidden>
+                        <label class="bia-letter-label" for="biaLetterTitle">Titlu</label>
+                        <input class="bia-letter-input" id="biaLetterTitle" maxlength="120" placeholder="Gândurile mele 💗">
+                        <label class="bia-letter-label" for="biaLetterBody">Scrisoarea ta</label>
+                        <textarea class="bia-letter-editor" id="biaLetterBody" maxlength="50000" placeholder="Dragă Vlăduț…&#10;&#10;Astăzi vreau să îți povestesc…"></textarea>
+                        <div class="bia-letter-actions">
+                            <button class="bia-letter-btn" type="button" onclick="saveBiaLetter(true)">Salvează acum 💗</button>
+                            <button class="bia-letter-btn secondary" type="button" onclick="lockBiaLetter()">Închide scrisoarea 🔒</button>
+                        </div>
+                        <p id="biaLetterLastSaved" class="bia-letter-status" aria-live="polite">Modificările se salvează automat după ce te oprești din scris.</p>
+                    </div>
+                    <p class="bia-letter-private-note">🔒 Scrisoarea este stocată online. Accesul este verificat pe server; codul secret nu este salvat în acest fișier HTML. Nu distribui codul altor persoane.</p>
+                </div>
+            </div>
+        </section>
+
         <section id="gallery" class="panel">
             <h2>lucruri care reprezintă povestea noastră... 🦋</h2>
 
@@ -1444,6 +1488,98 @@ async function toggleMusic(){
         button.setAttribute("aria-label","Pornește muzica");
     }
 }
+
+
+// CONFIGURARE: Project URL și Publishable key din Supabase.
+// Nu introduce aici BIA_LETTER_SECRET sau cheia service_role.
+const BIA_LETTER_FUNCTION_URL = "https://kpqbuxrewvpucxwyrsrt.supabase.co/functions/v1/bia-letter";
+const BIA_LETTER_ANON_KEY = "sb_publishable_IB3ngtsgCPgS_03iaP3t1Q_AH3Zq0Jx";
+let biaLetterSecretInMemory = "";
+let biaLetterSaveTimer = null;
+let biaLetterIsLoaded = false;
+
+function biaLetterSetStatus(message){
+    const el = document.getElementById("biaLetterLastSaved");
+    if(el) el.textContent = message;
+}
+
+async function biaLetterRequest(action, extra = {}){
+    const response = await fetch(BIA_LETTER_FUNCTION_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "apikey": BIA_LETTER_ANON_KEY,
+            "Authorization": "Bearer " + BIA_LETTER_ANON_KEY
+        },
+        body: JSON.stringify({ action, secret: biaLetterSecretInMemory, ...extra })
+    });
+    let result;
+    try { result = await response.json(); } catch { result = {}; }
+    if(!response.ok) throw new Error(result.error || "Cererea nu a reușit (" + response.status + ").");
+    return result;
+}
+
+async function openBiaLetter(){
+    const input = document.getElementById("biaLetterCode");
+    const secret = input.value;
+    if(!secret){ biaLetterSetStatus("Introdu codul secret. 💗"); return; }
+    biaLetterSecretInMemory = secret;
+    biaLetterSetStatus("Se încarcă scrisoarea…");
+    try{
+        const result = await biaLetterRequest("load");
+        document.getElementById("biaLetterTitle").value = result.letter?.title ?? "Gândurile mele 💗";
+        document.getElementById("biaLetterBody").value = result.letter?.body ?? "";
+        document.getElementById("biaLetterAccess").hidden = true;
+        document.getElementById("biaLetterEditorArea").hidden = false;
+        input.value = "";
+        biaLetterIsLoaded = true;
+        biaLetterSetStatus(result.letter?.updated_at ? "Scrisoare încărcată. Ultima salvare: " + new Date(result.letter.updated_at).toLocaleString("ro-RO") : "Nu există încă o scrisoare salvată. Poți începe să scrii. 💗");
+    }catch(error){
+        biaLetterSecretInMemory = "";
+        biaLetterIsLoaded = false;
+        biaLetterSetStatus(error.message || "Nu am putut deschide scrisoarea.");
+    }
+}
+
+async function saveBiaLetter(showStatus = false){
+    if(!biaLetterIsLoaded || !biaLetterSecretInMemory) return;
+    if(biaLetterSaveTimer){ clearTimeout(biaLetterSaveTimer); biaLetterSaveTimer = null; }
+    biaLetterSetStatus("Se salvează online…");
+    try{
+        const result = await biaLetterRequest("save", {
+            title: document.getElementById("biaLetterTitle").value,
+            body: document.getElementById("biaLetterBody").value
+        });
+        biaLetterSetStatus("Salvat online cu succes 💗 " + (result.letter?.updated_at ? new Date(result.letter.updated_at).toLocaleString("ro-RO") : ""));
+    }catch(error){
+        biaLetterSetStatus(error.message || "Nu am putut salva scrisoarea.");
+    }
+}
+
+function scheduleBiaLetterAutosave(){
+    if(!biaLetterIsLoaded || !biaLetterSecretInMemory) return;
+    if(biaLetterSaveTimer) clearTimeout(biaLetterSaveTimer);
+    biaLetterSetStatus("Modificări nesalvate — se salvează automat în câteva secunde…");
+    biaLetterSaveTimer = setTimeout(() => saveBiaLetter(false), 1200);
+}
+
+document.addEventListener("input", (event) => {
+    if(event.target && (event.target.id === "biaLetterTitle" || event.target.id === "biaLetterBody")) {
+        scheduleBiaLetterAutosave();
+    }
+});
+
+function lockBiaLetter(){
+    if(biaLetterSaveTimer){ clearTimeout(biaLetterSaveTimer); biaLetterSaveTimer = null; }
+    biaLetterSecretInMemory = "";
+    biaLetterIsLoaded = false;
+    document.getElementById("biaLetterTitle").value = "Gândurile mele 💗";
+    document.getElementById("biaLetterBody").value = "";
+    document.getElementById("biaLetterEditorArea").hidden = true;
+    document.getElementById("biaLetterAccess").hidden = false;
+    biaLetterSetStatus("Scrisoarea a fost închisă pe acest dispozitiv.");
+}
+
 </script>
 
 <div class="phone-memory">
@@ -1455,6 +1591,3 @@ async function toggleMusic(){
 
 </body>
 </html>
-
-
-
