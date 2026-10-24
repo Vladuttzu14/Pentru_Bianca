@@ -65,25 +65,29 @@ body.photo-zoom-open{overflow:hidden}
 
 .phone-memory.show-memory{display:block}
 
-#musicToggle{
-    position:fixed;
-    right:18px;
-    bottom:18px;
-    z-index:10001;
-    width:52px;
-    height:52px;
-    border:2px solid white;
-    border-radius:50%;
-    background:#d94f7c;
-    color:white;
-    font-size:23px;
-    cursor:pointer;
-    box-shadow:0 6px 18px rgba(60,25,40,.3);
-}
+/* Mini-player muzical extensibil */
+.music-widget{position:fixed;right:18px;bottom:18px;z-index:10001;font-family:"DM Sans",sans-serif}
+.music-widget-toggle{width:54px;height:54px;border:2px solid #fff;border-radius:50%;background:#d94f7c;color:#fff;font-size:23px;cursor:pointer;box-shadow:0 6px 18px rgba(60,25,40,.3);transition:transform .2s}
+.music-widget-toggle:hover{transform:scale(1.06)}
+.music-widget-card{display:none;width:min(320px,calc(100vw - 28px));margin-bottom:10px;padding:17px;border:1px solid #f1c5d4;border-radius:22px;background:rgba(255,250,252,.97);box-shadow:0 12px 35px rgba(90,35,60,.22);backdrop-filter:blur(12px)}
+.music-widget.open .music-widget-card{display:block;animation:playerPop .2s ease-out}
+@keyframes playerPop{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.music-widget-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.music-widget-cover{width:48px;height:48px;display:grid;place-items:center;flex-shrink:0;border-radius:15px;background:linear-gradient(135deg,#ffd8e6,#f59ab7);font-size:25px}
+.music-widget-title{font-weight:700;color:#9e365f;font-size:15px}
+.music-widget-subtitle{font-size:12px;color:#8c6572;margin-top:3px}
+.music-widget select{width:100%;padding:10px 12px;border:1px solid #efbfd0;border-radius:12px;background:#fff;color:#5b3342;font:inherit;font-size:13px;margin-bottom:12px}
+.music-widget-controls{display:flex;justify-content:center;align-items:center;gap:12px}
+.music-widget-controls button{border:0;cursor:pointer;color:#a43b63;background:#fce5ed;border-radius:50%;width:38px;height:38px;font-size:17px}
+.music-widget-controls button.play{width:46px;height:46px;background:#d94f7c;color:#fff;font-size:20px}
+.music-widget-controls button.loop-on{background:#d94f7c;color:#fff}
+.music-widget-status{margin-top:10px;text-align:center;color:#8c6572;font-size:11px;min-height:15px}
+.music-volume-control{display:flex;align-items:center;gap:9px;margin:13px 2px 12px;color:#a43b63}
+.music-volume-control input{flex:1;min-width:0;accent-color:#d94f7c;cursor:pointer}
+#musicVolumeIcon{width:20px;text-align:center;font-size:17px}
+#musicVolumeValue{min-width:38px;text-align:right;font-size:12px;color:#8c6572;font-variant-numeric:tabular-nums}
 
-@media(max-width:600px){
-    #musicWidget{right:12px;bottom:12px}
-}
+@media(max-width:600px){.music-widget{right:12px;bottom:12px}.music-widget-card{width:min(300px,calc(100vw - 24px))}}
 
 /* PAROLA */
 #lockScreen{
@@ -1524,24 +1528,73 @@ function onYouTubeIframeAPIReady(){
     });
 }
 
-async function toggleMusic(){
-    const music = document.getElementById("siteMusic");
-    const button = document.getElementById("musicToggle");
+const musicTracks = [
+    // Adaugă aici melodiile din folderul site-ului. Exemplu: { title: "Melodia noastră", src: "melodie.mp3" },
+    { title: "Mirrors ❤️", src: "Mirrors.mp3" },
+	{ title: "MrsMagic X LaLaLand", src: "MrsMagic_LaLaLand.mp3" },
+	{ title: "GoldenHour", src: "GoldenHour(Piano_Version).mp3" },
+	{ title: "I Wanted to Leave", src: "IWantedtoLeave.mp3" },
+	{ title: "Continui să te iubesc", src: "ContinuiSaTeIubesc.mp3" },
+	{ title: "Rain song", src: "melodie.mp3" }
+];
+let currentTrackIndex = 0;
+let musicLoopEnabled = true;
 
-    if(music.paused){
-        try{
-            await music.play();
-            button.textContent = "🔊";
-            button.setAttribute("aria-label","Oprește muzica");
-        }catch(error){
-            button.textContent = "⚠️";
-            button.setAttribute("aria-label","Nu s-a putut porni melodia");
-        }
-    }else{
-        music.pause();
-        button.textContent = "🔇";
-        button.setAttribute("aria-label","Pornește muzica");
+function initializeMusicPlayer(){
+    const audio = document.getElementById("siteMusic");
+    const select = document.getElementById("musicTrackSelect");
+    if(!audio || !select) return;
+    select.innerHTML = "";
+    musicTracks.forEach((track,index)=>{
+        const option=document.createElement("option");
+        option.value=String(index); option.textContent=track.title; select.appendChild(option);
+    });
+    if(musicTracks.length){
+        currentTrackIndex=0; audio.src=musicTracks[0].src; select.value="0";
+        document.getElementById("musicNowPlaying").textContent=musicTracks[0].title;
     }
+    audio.loop=musicLoopEnabled;
+    const volumeSlider=document.getElementById("musicVolumeSlider");
+    const volumeValue=document.getElementById("musicVolumeValue");
+    const volumeIcon=document.getElementById("musicVolumeIcon");
+    audio.volume=0.7;
+    volumeSlider.addEventListener("input",()=>{
+        const volume=Number(volumeSlider.value);
+        audio.volume=volume/100;
+        volumeValue.textContent=volume+"%";
+        volumeIcon.textContent=volume===0?"🔇":volume<50?"🔉":"🔊";
+    });
+    audio.addEventListener("play",()=>{document.getElementById("musicPlayButton").textContent="⏸";document.getElementById("musicWidgetToggle").textContent="🎶";});
+    audio.addEventListener("pause",()=>{document.getElementById("musicPlayButton").textContent="▶";document.getElementById("musicWidgetToggle").textContent="🎵";});
+    audio.addEventListener("error",()=>{document.getElementById("musicStatus").textContent="Nu am găsit fișierul audio. Verifică numele și folderul.";});
+}
+function toggleMusicWidget(){document.getElementById("musicWidget").classList.toggle("open");}
+async function toggleMusic(){
+    const audio=document.getElementById("siteMusic");
+    const status=document.getElementById("musicStatus");
+    if(audio.paused){
+        try{await audio.play();status.textContent="Se aude cu drag 💗";}
+        catch(error){status.textContent="Apasă din nou Play și verifică dacă fișierul MP3 există.";}
+    }else{audio.pause();status.textContent="Muzica este în pauză.";}
+}
+function selectMusicTrack(index,autoplay=true){
+    const audio=document.getElementById("siteMusic");
+    if(!musicTracks.length)return;
+    currentTrackIndex=(index+musicTracks.length)%musicTracks.length;
+    audio.src=musicTracks[currentTrackIndex].src;audio.loop=musicLoopEnabled;audio.load();
+    document.getElementById("musicTrackSelect").value=String(currentTrackIndex);
+    document.getElementById("musicNowPlaying").textContent=musicTracks[currentTrackIndex].title;
+    document.getElementById("musicStatus").textContent="Melodia a fost schimbată 💕";
+    if(autoplay)toggleMusic();
+}
+function previousMusicTrack(){selectMusicTrack(currentTrackIndex-1,true);}
+function nextMusicTrack(){selectMusicTrack(currentTrackIndex+1,true);}
+function changeSelectedMusicTrack(){selectMusicTrack(Number(document.getElementById("musicTrackSelect").value),true);}
+function toggleMusicLoop(){
+    musicLoopEnabled=!musicLoopEnabled;document.getElementById("siteMusic").loop=musicLoopEnabled;
+    const button=document.getElementById("musicLoopButton");button.classList.toggle("loop-on",musicLoopEnabled);
+    button.setAttribute("aria-pressed",String(musicLoopEnabled));
+    document.getElementById("musicStatus").textContent=musicLoopEnabled?"Loop activ: melodia se repetă 🔁":"Loop dezactivat.";
 }
 
 
@@ -1963,8 +2016,30 @@ setInterval(updateRelationshipCounter,1000);
     <div class="counter-details" id="counterDetails"></div>
 </button>
 
-<audio id="siteMusic" src="melodie.mp3" loop preload="auto"></audio>
-<button id="musicToggle" onclick="toggleMusic()" aria-label="Pornește muzica">🔇</button>
+<audio id="siteMusic" src="melodie.mp3" preload="metadata"></audio>
+<div id="musicWidget" class="music-widget">
+  <div class="music-widget-card" role="region" aria-label="Player muzical">
+    <div class="music-widget-head">
+      <div class="music-widget-cover">💗</div>
+      <div><div class="music-widget-title">Melodiile noastre</div><div id="musicNowPlaying" class="music-widget-subtitle">Melodia noastră ❤️</div></div>
+    </div>
+    <select id="musicTrackSelect" aria-label="Alege melodia" onchange="changeSelectedMusicTrack()"></select>
+    <div class="music-volume-control">
+      <span id="musicVolumeIcon" aria-hidden="true">🔊</span>
+      <input id="musicVolumeSlider" type="range" min="0" max="100" value="70" aria-label="Volum muzică">
+      <span id="musicVolumeValue">70%</span>
+    </div>
+    <div class="music-widget-controls">
+      <button type="button" onclick="previousMusicTrack()" aria-label="Melodia precedentă">⏮</button>
+      <button type="button" id="musicPlayButton" class="play" onclick="toggleMusic()" aria-label="Play sau pauză">▶</button>
+      <button type="button" onclick="nextMusicTrack()" aria-label="Melodia următoare">⏭</button>
+      <button type="button" id="musicLoopButton" class="loop-on" onclick="toggleMusicLoop()" aria-label="Activează sau dezactivează loop" aria-pressed="true">🔁</button>
+    </div>
+    <div id="musicStatus" class="music-widget-status" aria-live="polite">Alege o melodie și apasă Play ✨</div>
+  </div>
+  <button id="musicWidgetToggle" class="music-widget-toggle" type="button" onclick="toggleMusicWidget()" aria-label="Deschide playerul muzical">🎵</button>
+</div>
+<script>initializeMusicPlayer();</script>
 
 </body>
 </html>
