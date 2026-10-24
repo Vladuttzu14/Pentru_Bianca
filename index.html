@@ -872,6 +872,44 @@ h2{
 .bia-letter-private-note{font-size:13px;color:#8c6572;line-height:1.65;margin-top:14px}
 @media(max-width:600px){.bia-letter-editor{min-height:240px}.bia-letter-btn{flex:1}}
 
+
+/* Calendar and relationship counters */
+.relationship-counter{position:fixed;top:14px;right:14px;z-index:10002;border:1px solid #f2bfd0;border-radius:18px;padding:10px 14px;background:rgba(255,250,252,.96);box-shadow:0 8px 24px rgba(119,53,76,.16);color:#a43a61;cursor:pointer;text-align:center;max-width:min(300px,calc(100vw - 28px));font:600 12px "DM Sans",sans-serif;transition:transform .25s ease, padding .25s ease}
+.relationship-counter strong{display:block;font-size:14px}
+.relationship-counter.expanded{padding:18px 22px;transform:scale(1.04);font-size:14px}
+.relationship-counter .counter-details{display:none;margin-top:10px;line-height:1.7}
+.relationship-counter.expanded .counter-details{display:block}
+.relationship-counter.expanded #togetherCounter{display:none}
+#calendar .calendar-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+#calendar .calendar-head h2{margin:0}
+.calendar-nav{border:0;border-radius:50%;width:40px;height:40px;background:#d94f7c;color:white;font-size:22px;cursor:pointer}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.calendar-weekday{text-align:center;font-size:12px;font-weight:700;color:#a43a61;padding:8px 0}
+.calendar-day{position:relative;min-height:76px;border:1px solid #f1c5d4;border-radius:16px;background:#fff9fb;color:#8c5268;display:flex;align-items:center;justify-content:center;cursor:pointer;font:500 16px "DM Sans",sans-serif}
+.calendar-day.has-memory::after{content:"";position:absolute;bottom:8px;width:6px;height:6px;border-radius:50%;background:#d94f7c}
+.calendar-day.anniversary{border:0;background:transparent;overflow:visible;isolation:isolate}
+/* Inimă CSS clasică: pătratul rotit este acoperit de cei doi lobi rotunzi. */
+.calendar-day.anniversary .heart-shape{position:absolute;width:42px;height:42px;left:50%;top:50%;transform:translate(-50%,-40%) rotate(-45deg);background:#f59ab7;border-radius:4px;filter:drop-shadow(0 5px 5px rgba(180,65,105,.2));z-index:0}
+.calendar-day.anniversary .heart-shape::before,.calendar-day.anniversary .heart-shape::after{content:"";position:absolute;width:42px;height:42px;background:#f59ab7;border-radius:50%}
+.calendar-day.anniversary .heart-shape::before{top:-21px;left:0}
+.calendar-day.anniversary .heart-shape::after{top:0;left:21px}
+.calendar-day.anniversary span{position:relative;z-index:2;color:#fff;font-weight:800;text-shadow:0 1px 3px #d94f7c}
+.calendar-day.today{outline:2px solid #d94f7c;outline-offset:2px}
+.calendar-legend{display:flex;justify-content:center;align-items:center;gap:12px 20px;flex-wrap:wrap;margin:18px 0 4px;padding:14px 16px;border:1px solid #f1c5d4;border-radius:16px;background:#fff8fb;color:#805264;font-size:13px}
+.legend-item{display:inline-flex;align-items:center;gap:8px}
+.legend-heart{color:#f59ab7;font-size:24px;line-height:1;text-shadow:0 1px 2px #e8a0b8}
+.legend-dot{width:9px;height:9px;border-radius:50%;background:#d94f7c;display:inline-block}
+.legend-today{width:17px;height:17px;border:2px solid #d94f7c;border-radius:5px;display:inline-block;background:#fff}
+.calendar-day.white-heart{background:transparent;border:0}
+.calendar-day.white-heart::before{content:"♡";font-size:64px;line-height:1;color:white;-webkit-text-stroke:1px #e9a6be;text-shadow:0 4px 9px rgba(150,60,90,.18);position:absolute}
+.calendar-day.white-heart span{position:relative;z-index:1;margin-top:0}
+.calendar-day.selected{outline:2px solid #d94f7c;outline-offset:2px}
+.memory-detail{margin-top:22px;padding:22px;border-radius:20px;background:linear-gradient(135deg,#fff5f8,#fffafd);border:1px solid #f1c5d4;line-height:1.8}
+.memory-detail h3{margin:0 0 8px;color:#ad3d65;font-family:"Playfair Display",serif;font-size:25px}
+.memory-photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px}
+.memory-photos img{width:100%;max-height:280px;object-fit:cover;border-radius:14px;border:3px solid white;box-shadow:0 5px 15px #e9c0cf}
+@media(max-width:600px){.relationship-counter{top:8px;right:8px;padding:8px 10px}.relationship-counter strong{font-size:12px}.calendar-grid{gap:4px}.calendar-day{min-height:52px;border-radius:10px;font-size:14px}.calendar-day.anniversary .heart-shape{transform:translate(-50%,-40%) rotate(-45deg) scale(.72)}.calendar-day.white-heart::before{font-size:48px}.calendar-weekday{font-size:10px}}
+
 </style>
 </head>
 
@@ -963,17 +1001,13 @@ h2{
     <nav class="tabs">
         <button class="tab active" onclick="showTab('letter',this)">💌 For You</button>
         <button class="tab" onclick="showTab('music',this)">🎵 Music</button>
-        <button class="tab notes-tab" onclick="showTab('notes',this)">
-    📝 Notes
-    <!--<span class="new-badge">NEW ✨</span>-->
-</button>
-        <button class="tab notes-tab" onclick="showTab('photos',this)">
-    📸 Photos
-    <!-- <span class="new-badge">NEW ✨</span> -->
-</button>
-
+        <button class="tab notes-tab" onclick="showTab('notes',this)">📝 Notes<!--<span class="new-badge">NEW ✨</span>--></button>
+        <button class="tab notes-tab" onclick="showTab('photos',this)">📸 Photos<!-- <span class="new-badge">NEW ✨</span> --></button>
         <button class="tab notes-tab" onclick="showTab('gallery',this)">🦋 Little Things <!-- <span class="new-badge">NEW ✨</span> --> </button>
-        <button class="tab notes-tab" onclick="showTab('biaLetter',this)">💌 From Bia <span class="new-badge">NEW ✨</span></button>
+        <button class="tab notes-tab" onclick="showTab('biaLetter',this)">💌 From Bia <!-- <span class="new-badge">NEW ✨</span> --> </button>
+        <button class="tab notes-tab" onclick="showTab('calendar',this);renderCalendar()">🗓️ Calendar <span class="new-badge">NEW ✨</span></button>
+		
+
     </nav>
 
     <main class="main">
@@ -1187,11 +1221,6 @@ h2{
 
 
         <section id="photos" class="panel">
-            <!--
-              Înlocuiește fiecare src="" cu numele fotografiei tale.
-              Toate fotografiile sunt înclinate în aceeași direcție.
-              Copiază blocul figure pentru a adăuga mai multe poze.
-            -->
             <div class="photo-wall" aria-label="Colaj de fotografii pe fundal">
                 <figure class="photo-wall-card"><img src="1.jpg" alt="Fotografie 1"></figure>
                 <figure class="photo-wall-card"><img src="x.jpeg" alt="Fotografie 2"></figure>
@@ -1268,6 +1297,23 @@ h2{
                     <span>iubirea noastră sinceră și toate cele care urmează</span>
                 </div>
             </div>
+        </section>
+
+        <section id="calendar" class="panel">
+            <div class="calendar-head">
+                <button class="calendar-nav" type="button" onclick="changeCalendarMonth(-1)" aria-label="Luna precedentă">‹</button>
+                <h2 id="calendarMonthTitle">Calendarul nostru 💗</h2>
+                <button class="calendar-nav" type="button" onclick="changeCalendarMonth(1)" aria-label="Luna următoare">›</button>
+            </div>
+            <p>Apasă pe o zi ca să redescoperi o amintire. 🤍</p>
+            <div class="calendar-grid" id="calendarGrid"></div>
+            <div class="calendar-legend" aria-label="Legenda calendarului">
+                <span class="legend-item"><span class="legend-heart" aria-hidden="true">♥</span> Aniversarea noastră</span>
+                <span class="legend-item"><span class="legend-dot" aria-hidden="true"></span> Amintiri/momente/întâlniri</span>
+                <span class="legend-item"><span class="legend-today" aria-hidden="true"></span> Ziua de astăzi</span>
+                <span class="legend-item"><span class="legend-heart" aria-hidden="true" style="color:white;-webkit-text-stroke:1px #e9a6be">♡</span> Ziua în care ne-am cunoscut</span>
+            </div>
+            <div id="memoryDetail" class="memory-detail" aria-live="polite"><h3>Amintirile noastre</h3><p>Alege o zi marcată din calendar. 💗</p></div>
         </section>
 
     </main>
@@ -1580,11 +1626,324 @@ function lockBiaLetter(){
     biaLetterSetStatus("Scrisoarea a fost închisă pe acest dispozitiv.");
 }
 
+
+// Amintiri editabile: poți adăuga sau elimina fotografii din lista photos.
+const memories = {
+  "2026-08-13": {
+    type: "anniversary",
+    title: "Ziua noastră ❤️",
+    description: "Ziua în care am devenit oficial împreună.",
+    photos: []
+  },
+  "2026-03-31": {
+    type: "knowing",
+    title: "Ziua în care ne-am cunoscut 🤍",
+    description: "Aceasta a fost seara magică în care cred eu.. ca Dumnezeu mi-a dat frumosul impuls să îți scriu [Cred că știa el ceva.... CĂ NE POTRIVIM :)) ] 🥹 și așa a început povestea noastră și conversațiile care ne-au apropiat. 🤍",
+    photos: []
+  },
+  "2026-04-02": {
+    type: "date",
+    title: "Ți-am dat primul mesaj vocal 🤍",
+    description: "Țin minte că am înregistrat ceva melodii.. și parcă mi-am facut curaj să și vobesc :)",
+    photos: []
+  },
+  "2026-04-03": {
+    type: "date",
+    title: "am inceput sa ne urmărim pe TikTok",
+    description: "Țin minte că îmi trimiteai pe insta ttk-uri și le deschideam greu așa ca am facut trecerea la tiktok :)",
+    photos: []
+  },
+  "2026-04-05": {
+    type: "date",
+    title: "Ți-am trimis pentru prima dată o poză cu mine",
+    description: "Era în contextul că vorbeam despre frizura mea.. că îți povesteam că acum am părul mai lung .. iar tu mi-ai zis că îmi stă super tuns scurt.",
+    photos: []
+  },
+  "2026-04-06": {
+    type: "date",
+    title: "Am inceput serie pe ttk cu mascota ",
+    description: "",
+    photos: []
+  },
+  "2026-04-13": {
+    type: "date",
+    title: "Ți-am spus primul buna dimiii ",
+    description: "",
+    photos: []
+  },
+  "2026-04-20": {
+    type: "date",
+    title: "Prima poză de la tineeee 😍 ",
+    description: "Mi-ai trimis pentru prima dată o poză cu tineee și tot atunci mi-ai dat numărul tău de telefon 😍",
+    photos: []
+  },
+  "2026-04-21": {
+    type: "date",
+    title: "Am fost pentru prima dată mai copilăroși ",
+    description: "Ne-am trimis pentru prima dată poze din copilărie 🥹 și ne-am jucat primul joculeț.. ăla cu ghicește vedeta și am vorbit și despre desene animate din copilarie",
+    photos: []
+  },
+  "2026-04-30": {
+    type: "date",
+    title: "Te plac măăăi ",
+    description: "Ți-am mărturisit că cea mai frumoasă parte din luna asta a fost că am început să vorbim",
+    photos: []
+  },
+  "2026-05-03": {
+    type: "date",
+    title: "Ziua în care am început să cred că și tu mă placi ",
+    description: "A fost ziua în care m-am trezit cu un mesaj drăguț de la tine 😁 m-ai întrebat dacă aș vrea să ne vedem cândva 😍🫶",
+    photos: []
+  },
+  "2026-05-07": {
+    type: "date",
+    title: "Primul Biaa🩷",
+    description: "Ți-am zis pentru prima dată Bia 🩷.. când ți-am urat noapte buna",
+    photos: []
+  },
+  "2026-05-08": {
+    type: "date",
+    title: "Prima dată când am început să simt că îți pasă cu adevărat",
+    description: "Mi-ai urat drum bun și m-ai întrebat daca am ajuns acasaaa 😭🥹 m-a emoționatt foarte tare.. pentru prima dată incepeam să simt că îi pasă cuiva de mineee 🥹",
+    photos: []
+  },
+  "2026-05-09": {
+    type: "date",
+    title: "Primul meu mesaj vocal de noapte bunaaa pentru tineee 😘",
+    description: "",
+    photos: []
+  },
+  "2026-05-10": {
+    type: "date",
+    title: "Mesaj de noapte bunaaa special 😘",
+    description: "Am făcut un mini proiect de electronică in care afișa pe un ecran oled -Noapte Buna, Biaaa ❤️-",
+    photos: []
+  },
+  "2026-05-13": {
+    type: "date",
+    title: "Mi-ai spus pentru prima dată numele când mi-ai zis noapte buna 🥹",
+    description: "",
+    photos: []
+  },
+  "2026-05-17": {
+    type: "date",
+    title: "Ne-am spus noapte buna în același timp 🥹",
+    description: "Ne-am scris pentru prima dată ceva deodată 😍 [INTERLINKED] ne-am scris noapte buna in același timp 🥰",
+    photos: []
+  },
+  "2026-06-01": {
+    type: "date",
+    title: "Your BDay 🥹",
+    description: "Ziua taaaa, My Loveeeee ❤️❤️❤️😘 și am avut examen.. eram stresat și mi-ai dat incredere.. ai zis că o să fie bine.. și asa a fost ",
+    photos: []
+  },
+  "2026-06-07": {
+    type: "date",
+    title: "First Letter",
+    description: "Ți-am scris prima scrisorică.. pe care sincer nu credeam că o să o vezi vreodată 🫣",
+    photos: []
+  },
+  "2026-06-13": {
+    type: "date",
+    title: "O mică surpriză",
+    description: "Știam că ești extenuata de atâta învățat și am vrut sa îți dau putina încredere așa că am făcut site-ul cu pisicuțe pentru tine",
+    photos: []
+  },
+  "2026-06-17": {
+    type: "date",
+    title: "Îți mulțumesc că EȘTIIII 🥹😘",
+    description: "Ziua în care am picat în examen și am avut prima restanță. Și ziua în care tu m-ai susținut și m-ai ridicat cu capul din pământ și mi-ai oferit încrederea necesară să termin cu bine restul sesiunii. Îți mulțumesc scumpă mea iubitaaa 🥺🩷 Love U muuult 💗",
+    photos: []
+  },
+  "2026-06-27": {
+    type: "date",
+    title: "Îți mulțumesc că EȘTIIII 🥹😘",
+    description: "M-ai emoționat foarte tare că mi-ai trimis mesaj de ziua mea.. și nu doar asta.. cu faptul că tu ai fost prima care a făcut-o 🥹 la 0:01 .. Te-ai gândit la mineeee, puiuuuț",
+    photos: []
+  },
+  "2026-07-06": {
+    type: "date",
+    title: "Prima noastră întâlnire",
+    description: "A fost momentul când totul a devenit reaaal 🥹. Atunci ți-am oferit primul trandafir și am băut prima băutură împreună.. încă mai țin minte ce.. a fost Frappedecofeinizat cu caramel :) Să știi că am simțit de la început că ești ce trebuieeee și eram îndragostiiiit de tineeee ❤️❤️❤️😘 ",
+    photos: []
+  },
+  "2026-07-11": {
+    type: "date",
+    title: "Ziua cel mai frumos compliment",
+    description: "Mi-ai spus că mă consideri de încredereee 🥹",
+    photos: []
+  },
+  "2026-07-13": {
+    type: "date",
+    title: "Invitația la Vals",
+    description: "A fost ziua în care mi-ai imprumutat cartea iar eu ți-am dat prima scrisoricaaa (ma refer dintre cele scrise explicit pentru a le citi tu). Eu am vrut să vin mai mult pentru a ne vedea.. dar normal că voiam și să citesc cartea :)",
+    photos: []
+  },
+  "2026-07-22": {
+    type: "date",
+    title: "A 2-a întâlnire",
+    description: "A fost ca și data trecută frumos..de data asta țin minte că pentru prima dată te-am atins.. aveai ceva pe năsuc și am dat la o parte ... s-a simțit așa divină parca acea atingere... parcă pluteam :)",
+    photos: []
+  },
+  "2026-07-31": {
+    type: "date",
+    title: "Ultima zi de Iulie",
+    description: "Mi-ai făcut surpriza aia cu mini ScrapBook-ul.. mi-a placut muuult.. m-ai emoționat așa tare că am început să plâng",
+    photos: []
+  },
+  "2026-08-05": {
+    type: "date",
+    title: "A 3-a întâlnire",
+    description: "Nu am să uit ziua asta niciodată.. era canicula..aproape 38 Grade .. ne topeam amândoi.. a fost prima dată când am mers la cofetărie.. doar pentru a sta mai la răcoare :) și a fost momentul în care am facut primele noastre poze împreună.. și da țin minte.. aveam și aparatul foto și încercam să fac poza cu telefoanele și îmi tremura în mânăăăă :)  A fost amuzant. Iar la final.. in stație ne-am îmbrățișat pentru prima dată 😍",
+    photos: []
+  },
+  "2026-08-13": {
+    type: "date",
+    title: "A 4-a întâlnire [OFICIAL ÎMPREUNAAA]",
+    description: "A fost o zi frumoasaaaa. Am mâncat câte o prâjitură și am facut o grămadă de poze împreună. A fost ziua în care am facut prima postare publică și a fost și ziua în care am devenit oficial împreună. Te Iubeeeesc Îngerașul meu frumoooos ❤️",
+    photos: []
+  },
+  "2026-08-17": {
+    type: "date",
+    title: "A 5-a întâlnire [Movie Night]",
+    description: "A fost prima seară petrecută împreună. Mi-a plăcut foarte mult că am văzut filmul împreună și a fost foarte fain să mergem cu mașina și să te duc acasă. Tot atunci ți-am dat prima felicitare în care îți spuneam I LOVE YOU SO MUCH, BIAAA ❤️. A fost o seară chiar minunată și reușită.. mi-a plăcut foarte mult.",
+    photos: []
+  },
+  "2026-09-01": {
+    type: "date",
+    title: "A 6-a întâlnire [Ziggy]",
+    description: "Prima zi de toamnă de anul acesta am început-o împreună. Ți-am oferit și primul trandafir de toamna asta.. unul Roșu.. foarte frumos și tu m-ai surprins maaai 🥹 Nu m-am așteptat la acest cadouașșș .. și uiteee acum îl am pe Ziggy.. face și el parte din povestea noastră și îmi amintește zilnic cât de mult însemn pentru tine. Ești cea mai minunată persoana 🥹 Te iubesc din tot suflețelul meeeu ❤️❤️❤️❤️",
+    photos: []
+  },
+  "2026-09-17": {
+    type: "date",
+    title: "A 7-a întâlnire [Ne-am ținut de mânuțeeee]",
+    description: " A fost o zi frumoasă.. aveam emoții..și tu aveai emoții..Ți-am dat a 2-a scrisorică️ și chestiuța cu brațele care se deschid.. și tu m-ai surprins cu o ciocolată 😍 Mi-a placut foarte mult să stăm împreună...să vorbim..Am fost deja mai apropiați. pentru prima dată m-am apropiat mai mult de tine și te-am cuprins pe bancă și am facut cele mai multe pozeeee și au ieșit frumoooos și am și postat și mi-a plăcut că m-ai atins și că am stat așa apropiați și la pozeee.. Iar când am mers spre microbuz s-a întâmplat magia și ne-am ținut de mânuțeeee 😍😍 ",
+    photos: []
+  },
+  "2026-10-03": {
+    type: "date",
+    title: "A 8-a întâlnire",
+    description: " A fost printre cele mai frumoase zileee.. aveam emoții..și am aflat că și tu aveai emoții..Am venit să te iau .. și parcă drumul până în oraș a ajutat să mai scadă emoțiile. Ți-am luat laleliciii și vaiiii brațarelelee. A fost wooow de data asta... M-am mai relaxat.. am stat cuprinși, am mancat prăjiturică și ne țineam de mânuțeee.. SUPERBBB. Și mi-am făcut și curaj și ti-am spus real că te iubesc și mi-am exprimat în mod direct sentimentele în fața ta.. M-am simțit super bine că am putut face asta. Mi-a placut la nebunieee să stăm împreună...Am început deșa să mă simt relaxat și să fiu eu în preajma ta și îmi place asta foarte mult. Și pe drum spre casă deșa îmi era dor de tineee.. îți simțeam lipsa, iubiiiiii 🥹 ",
+    photos: []
+  },
+  "2026-10-17": {
+    type: "date",
+    title: "A 9-a întâlnire",
+    description: "Momentan asta a fost ultima noastră întalnire dar a fost cea mai frumoasă.. A fost foarte asemănătoare cu ultima.. dar a fost mult mai frumoasăăă. Și vaiii mi-am făcut curaj și ti-am dat și un pupiiic 💗 Te iubeeeesc, scumpaaaaa 💗💗💗",
+    photos: ["images/intalnire-17-octombrie.jpg"]
+  }
+};
+let calendarYear = new Date().getFullYear();
+let calendarMonth = new Date().getMonth();
+const calendarStart = new Date(2026, 0, 1);
+const calendarEnd = new Date(2027, 11, 1);
+
+function datePartsSince(startString, now = new Date()){
+    const start = new Date(startString + "T00:00:00");
+    if(now < start) return {years:0, months:0, days:0};
+    let years = now.getFullYear() - start.getFullYear();
+    let months = now.getMonth() - start.getMonth();
+    let days = now.getDate() - start.getDate();
+    if(days < 0){
+        months--;
+        const previousMonthDays = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+        days += previousMonthDays;
+    }
+    if(months < 0){ years--; months += 12; }
+    return {years,months,days};
+}
+function durationText(startString){
+    const d = datePartsSince(startString);
+    const parts = [];
+    if(d.years > 0) parts.push(d.years + (d.years === 1 ? " an" : " ani"));
+    if(d.months > 0) parts.push(d.months + (d.months === 1 ? " lună" : " luni"));
+    if(d.days > 0 || parts.length === 0) parts.push(d.days + (d.days === 1 ? " zi" : " zile"));
+    return parts.join(", ");
+}
+function updateRelationshipCounter(){
+    const together = durationText("2026-08-13");
+    const known = durationText("2026-03-31");
+    const counter = document.getElementById("togetherCounter");
+    if(counter) counter.textContent = "Împreună de " + together + " 💗";
+    const details = document.getElementById("counterDetails");
+    if(details) details.innerHTML = "<strong>Ne cunoaștem și vorbim de:</strong> " + known + " 🤍<br><strong>Oficial împreună de:</strong> " + together + " 💗";
+}
+function toggleRelationshipCounter(){
+    const el = document.getElementById("relationshipCounter");
+    const expanded = el.classList.toggle("expanded");
+    el.setAttribute("aria-expanded", String(expanded));
+    const hint = document.getElementById("counterHint");
+    if(hint) hint.textContent = expanded ? "apasă sus pentru a reveni ↩️" : "apasă pentru detalii ✨";
+}
+function renderCalendar(){
+    const grid = document.getElementById("calendarGrid");
+    if(!grid) return;
+    const title = document.getElementById("calendarMonthTitle");
+    title.textContent = new Date(calendarYear,calendarMonth,1).toLocaleDateString("ro-RO",{month:"long",year:"numeric"});
+    grid.innerHTML = "";
+    ["Lu","Ma","Mi","Jo","Vi","Sâ","Du"].forEach(day=>{
+        const el=document.createElement("div");el.className="calendar-weekday";el.textContent=day;grid.appendChild(el);
+    });
+    const firstDay = new Date(calendarYear,calendarMonth,1);
+    const offset = (firstDay.getDay()+6)%7;
+    for(let i=0;i<offset;i++){const blank=document.createElement("div");grid.appendChild(blank);}
+    const total = new Date(calendarYear,calendarMonth+1,0).getDate();
+    for(let day=1;day<=total;day++){
+        const key = `${calendarYear}-${String(calendarMonth+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+        const memory = memories[key];
+        const button=document.createElement("button");
+        button.type="button";button.className="calendar-day";
+        const now = new Date();
+        if(calendarYear===now.getFullYear() && calendarMonth===now.getMonth() && day===now.getDate()) button.classList.add("today");
+        const number=document.createElement("span");number.textContent=day;button.appendChild(number);
+        if(memory){
+            button.classList.add("has-memory");
+            if(memory.type==="anniversary"){button.classList.add("anniversary");const shape=document.createElement("i");shape.className="heart-shape";button.appendChild(shape);}
+            if(memory.type==="knowing"){button.classList.add("white-heart");}
+            button.setAttribute("aria-label",day+" — "+memory.title);
+            button.onclick=()=>showMemory(key,button);
+        } else {
+            button.onclick=()=>{document.querySelectorAll(".calendar-day.selected").forEach(x=>x.classList.remove("selected"));button.classList.add("selected");document.getElementById("memoryDetail").innerHTML="<h3>"+day+" "+title.textContent+"</h3><p>O zi în care poate vom adăuga o amintire. 💗</p>";};
+        }
+        grid.appendChild(button);
+    }
+}
+function showMemory(key,button){
+    document.querySelectorAll(".calendar-day.selected").forEach(x=>x.classList.remove("selected"));
+    button.classList.add("selected");
+    const memory=memories[key];
+    const detail=document.getElementById("memoryDetail");
+    detail.innerHTML="";
+    const heading=document.createElement("h3");heading.textContent=memory.title;detail.appendChild(heading);
+    const date=document.createElement("p");date.textContent=new Date(key+"T00:00:00").toLocaleDateString("ro-RO",{day:"numeric",month:"long",year:"numeric"});detail.appendChild(date);
+    const description=document.createElement("p");description.textContent=memory.description;detail.appendChild(description);
+    const photos=(memory.photos||[]).filter(Boolean);
+    if(photos.length){
+        const wrap=document.createElement("div");wrap.className="memory-photos";
+        photos.forEach(src=>{const img=document.createElement("img");img.src=src;img.alt=memory.title;img.onerror=()=>img.remove();wrap.appendChild(img);});
+        detail.appendChild(wrap);
+    }
+}
+function changeCalendarMonth(delta){
+    const next=new Date(calendarYear,calendarMonth+delta,1);
+    if(next<calendarStart || next>calendarEnd) return;
+    calendarYear=next.getFullYear();calendarMonth=next.getMonth();renderCalendar();
+}
+updateRelationshipCounter();
+setInterval(updateRelationshipCounter,1000);
+
 </script>
 
 <div class="phone-memory">
     <img src="DSC00532.JPG" alt="O amintire cu noi">
 </div>
+
+<button id="relationshipCounter" class="relationship-counter" type="button" onclick="toggleRelationshipCounter()" aria-expanded="false">
+    <strong id="togetherCounter">Împreună 💗</strong>
+    <span id="counterHint">apasă pentru detalii ✨</span>
+    <div class="counter-details" id="counterDetails"></div>
+</button>
 
 <audio id="siteMusic" src="melodie.mp3" loop preload="auto"></audio>
 <button id="musicToggle" onclick="toggleMusic()" aria-label="Pornește muzica">🔇</button>
