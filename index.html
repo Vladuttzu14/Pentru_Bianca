@@ -800,6 +800,11 @@ h2{
 }
 #photos .photo-wall-card img{width:100%;height:100%;display:block;object-fit:cover;border-radius:10px;background:linear-gradient(145deg,#ffe0eb,#f6b8ce)}
 /* Fotografiile din tabul Fotografii se pot deschide mari la clic */
+.memory-photo-zoomed{
+    width:auto!important;height:auto!important;max-width:88vw;max-height:82vh;object-fit:contain;
+    padding:10px;background:#fff;border-radius:12px;cursor:zoom-out;z-index:1;
+    box-shadow:0 25px 80px rgba(0,0,0,.4);animation:zoomPolaroidIn .3s cubic-bezier(.2,.8,.25,1) both;
+}
 .photo-wall-card.zoomed{
     position:relative!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
     width:min(88vw,680px)!important;height:auto!important;aspect-ratio:auto!important;max-height:90vh;
@@ -907,7 +912,7 @@ h2{
 .memory-detail{margin-top:22px;padding:22px;border-radius:20px;background:linear-gradient(135deg,#fff5f8,#fffafd);border:1px solid #f1c5d4;line-height:1.8}
 .memory-detail h3{margin:0 0 8px;color:#ad3d65;font-family:"Playfair Display",serif;font-size:25px}
 .memory-photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px}
-.memory-photos img{width:100%;max-height:280px;object-fit:cover;border-radius:14px;border:3px solid white;box-shadow:0 5px 15px #e9c0cf}
+.memory-photos img{display:block;width:100%;height:auto;max-height:500px;object-fit:contain;object-position:center;background:#fff7fa;border-radius:14px;border:3px solid white;box-shadow:0 5px 15px #e9c0cf}
 @media(max-width:600px){.relationship-counter{top:8px;right:8px;padding:8px 10px}.relationship-counter strong{font-size:12px}.calendar-grid{gap:4px}.calendar-day{min-height:52px;border-radius:10px;font-size:14px}.calendar-day.anniversary .heart-shape{transform:translate(-50%,-40%) rotate(-45deg) scale(.72)}.calendar-day.white-heart::before{font-size:48px}.calendar-weekday{font-size:10px}}
 
 </style>
@@ -1396,6 +1401,7 @@ function openPhoto(photo){
         nextSibling: photo.nextSibling
     });
     photo.classList.add("zoomed");
+    if(photo.tagName === "IMG") photo.classList.add("memory-photo-zoomed");
     backdrop.appendChild(photo);
     backdrop.classList.add("open");
     document.body.classList.add("photo-zoom-open");
@@ -1403,12 +1409,12 @@ function openPhoto(photo){
 
 function closePhoto(){
     const backdrop = document.getElementById("photoZoomBackdrop");
-    const photo = backdrop.querySelector(".polaroid.zoomed, .photo-wall-card.zoomed");
+    const photo = backdrop.querySelector(".polaroid.zoomed, .photo-wall-card.zoomed, .memory-photo-zoomed");
 
     if(!photo) return;
 
     const original = photoOriginalPositions.get(photo);
-    photo.classList.remove("zoomed");
+    photo.classList.remove("zoomed", "memory-photo-zoomed");
 
     if(original && original.parent){
         if(original.nextSibling && original.nextSibling.parentNode === original.parent){
@@ -1423,7 +1429,10 @@ function closePhoto(){
     document.body.classList.remove("photo-zoom-open");
 }
 
-document.getElementById("photoZoomBackdrop").addEventListener("click",closePhoto);
+document.getElementById("photoZoomBackdrop").addEventListener("click",function(event){
+    // Închide fotografia doar când se apasă pe fundal, nu pe fotografia mărită.
+    if(event.target === this) closePhoto();
+});
 
 document.querySelectorAll(".photo-wall-card").forEach(function(photo){
     photo.addEventListener("click",function(event){
@@ -1764,8 +1773,8 @@ const memories = {
   "2026-07-06": {
     type: "date",
     title: "Prima noastră întâlnire",
-    description: "A fost momentul când totul a devenit reaaal 🥹. Atunci ți-am oferit primul trandafir și am băut prima băutură împreună.. încă mai țin minte ce.. a fost Frappedecofeinizat cu caramel :) Să știi că am simțit de la început că ești ce trebuieeee și eram îndragostiiiit de tineeee ❤️❤️❤️😘 ",
-    photos: []
+    description: "A fost momentul când totul a devenit reaaal 🥹. Atunci ți-am oferit primul trandafir și am băut prima băutură împreună.. încă mai țin minte ce.. a fost Frappe decofeinizat cu caramel :) Să știi că am simțit de la început că ești ce trebuieeee și eram îndragostiiiit de tineeee ❤️❤️❤️😘 ",
+    photos: ["1.jpg"]
   },
   "2026-07-11": {
     type: "date",
@@ -1795,43 +1804,43 @@ const memories = {
     type: "date",
     title: "A 3-a întâlnire",
     description: "Nu am să uit ziua asta niciodată.. era canicula..aproape 38 Grade .. ne topeam amândoi.. a fost prima dată când am mers la cofetărie.. doar pentru a sta mai la răcoare :) și a fost momentul în care am facut primele noastre poze împreună.. și da țin minte.. aveam și aparatul foto și încercam să fac poza cu telefoanele și îmi tremura în mânăăăă :)  A fost amuzant. Iar la final.. in stație ne-am îmbrățișat pentru prima dată 😍",
-    photos: []
+    photos: ["2.jpg","DSC00532.JPG"]
   },
   "2026-08-13": {
     type: "date",
     title: "A 4-a întâlnire [OFICIAL ÎMPREUNAAA]",
     description: "A fost o zi frumoasaaaa. Am mâncat câte o prâjitură și am facut o grămadă de poze împreună. A fost ziua în care am facut prima postare publică și a fost și ziua în care am devenit oficial împreună. Te Iubeeeesc Îngerașul meu frumoooos ❤️",
-    photos: []
+    photos: ["a.jpg","c.jpg","y.jpg"]
   },
   "2026-08-17": {
     type: "date",
     title: "A 5-a întâlnire [Movie Night]",
     description: "A fost prima seară petrecută împreună. Mi-a plăcut foarte mult că am văzut filmul împreună și a fost foarte fain să mergem cu mașina și să te duc acasă. Tot atunci ți-am dat prima felicitare în care îți spuneam I LOVE YOU SO MUCH, BIAAA ❤️. A fost o seară chiar minunată și reușită.. mi-a plăcut foarte mult.",
-    photos: []
+    photos: ["e.jpeg","car.jpeg"]
   },
   "2026-09-01": {
     type: "date",
     title: "A 6-a întâlnire [Ziggy]",
     description: "Prima zi de toamnă de anul acesta am început-o împreună. Ți-am oferit și primul trandafir de toamna asta.. unul Roșu.. foarte frumos și tu m-ai surprins maaai 🥹 Nu m-am așteptat la acest cadouașșș .. și uiteee acum îl am pe Ziggy.. face și el parte din povestea noastră și îmi amintește zilnic cât de mult însemn pentru tine. Ești cea mai minunată persoana 🥹 Te iubesc din tot suflețelul meeeu ❤️❤️❤️❤️",
-    photos: []
+    photos: ["3.jpg","x.jpeg"]
   },
   "2026-09-17": {
     type: "date",
     title: "A 7-a întâlnire [Ne-am ținut de mânuțeeee]",
     description: " A fost o zi frumoasă.. aveam emoții..și tu aveai emoții..Ți-am dat a 2-a scrisorică️ și chestiuța cu brațele care se deschid.. și tu m-ai surprins cu o ciocolată 😍 Mi-a placut foarte mult să stăm împreună...să vorbim..Am fost deja mai apropiați. pentru prima dată m-am apropiat mai mult de tine și te-am cuprins pe bancă și am facut cele mai multe pozeeee și au ieșit frumoooos și am și postat și mi-a plăcut că m-ai atins și că am stat așa apropiați și la pozeee.. Iar când am mers spre microbuz s-a întâmplat magia și ne-am ținut de mânuțeeee 😍😍 ",
-    photos: []
+    photos: ["cute.webp","cute2.webp","cute3.webp"]
   },
   "2026-10-03": {
     type: "date",
     title: "A 8-a întâlnire",
     description: " A fost printre cele mai frumoase zileee.. aveam emoții..și am aflat că și tu aveai emoții..Am venit să te iau .. și parcă drumul până în oraș a ajutat să mai scadă emoțiile. Ți-am luat laleliciii și vaiiii brațarelelee. A fost wooow de data asta... M-am mai relaxat.. am stat cuprinși, am mancat prăjiturică și ne țineam de mânuțeee.. SUPERBBB. Și mi-am făcut și curaj și ti-am spus real că te iubesc și mi-am exprimat în mod direct sentimentele în fața ta.. M-am simțit super bine că am putut face asta. Mi-a placut la nebunieee să stăm împreună...Am început deșa să mă simt relaxat și să fiu eu în preajma ta și îmi place asta foarte mult. Și pe drum spre casă deșa îmi era dor de tineee.. îți simțeam lipsa, iubiiiiii 🥹 ",
-    photos: []
+    photos: ["love1.jpeg"]
   },
   "2026-10-17": {
     type: "date",
     title: "A 9-a întâlnire",
-    description: "Momentan asta a fost ultima noastră întalnire dar a fost cea mai frumoasă.. A fost foarte asemănătoare cu ultima.. dar a fost mult mai frumoasăăă. Și vaiii mi-am făcut curaj și ti-am dat și un pupiiic 💗 Te iubeeeesc, scumpaaaaa 💗💗💗",
-    photos: ["images/intalnire-17-octombrie.jpg"]
+    description: "Biaaa, ziua asta mi-a rămas în suflet pentru toate emoțiile și momentele frumoase pe care le-am trăit împreună. 🥹 M-am bucurat mult de surpriza pe care mi-ai făcut-o și de timpul petrecut împreună. Chiar și lucrurile mici, cum ar fi să mergem la cofetărie, să stăm de vorbă, să râdem și să ne apropiem unul de celălalt, înseamnă enorm pentru mine.Cred că cel mai mult îmi plac momentele în care pot să te țin în brațe, să te simt aproape și să mă bucur pur și simplu că sunt lângă tine. Și chair dacă aveam emoții foarte mari mi-am făcut curaj și ți-am dat și un pupic 😍 S-a simțit așa frumooooos 😍😍 Uneori nici nu avem nevoie de ceva spectaculos ca să fim fericiți. E suficient să fim noi doi, să ne zâmbim și să ne creăm amintiri pe care să le păstrăm în suflețel. ❤️Îți mulțumesc pentru momentele astea, Biaa. Poate unele par mici și obișnuite, dar pentru mine au o însemnătate aparte. Mă bucur că te am în viața mea și sper să mai avem parte de multe asemenea zile frumoase. Te iubeeeesc, frumoasa mea! 💗🥹",
+    photos: ["date9-1.jpg","date9-3.jpg","date9-2.jpg"]
   }
 };
 let calendarYear = new Date().getFullYear();
@@ -1921,7 +1930,16 @@ function showMemory(key,button){
     const photos=(memory.photos||[]).filter(Boolean);
     if(photos.length){
         const wrap=document.createElement("div");wrap.className="memory-photos";
-        photos.forEach(src=>{const img=document.createElement("img");img.src=src;img.alt=memory.title;img.onerror=()=>img.remove();wrap.appendChild(img);});
+        photos.forEach(src=>{
+            const img=document.createElement("img");
+            img.src=src;img.alt=memory.title;img.onerror=()=>img.remove();
+            img.style.cursor="zoom-in";
+            img.addEventListener("click",function(event){
+                event.stopPropagation();
+                openPhoto(img);
+            });
+            wrap.appendChild(img);
+        });
         detail.appendChild(wrap);
     }
 }
