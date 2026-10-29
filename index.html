@@ -919,6 +919,43 @@ h2{
 .memory-photos img{display:block;width:100%;height:auto;max-height:500px;object-fit:contain;object-position:center;background:#fff7fa;border-radius:14px;border:3px solid white;box-shadow:0 5px 15px #e9c0cf}
 @media(max-width:600px){.relationship-counter{top:8px;right:8px;padding:8px 10px}.relationship-counter strong{font-size:12px}.calendar-grid{gap:4px}.calendar-day{min-height:52px;border-radius:10px;font-size:14px}.calendar-day.anniversary .heart-shape{transform:translate(-50%,-40%) rotate(-45deg) scale(.72)}.calendar-day.white-heart::before{font-size:48px}.calendar-weekday{font-size:10px}}
 
+
+/* POEZIA — tabul cu steluță și imagine pe tot fundalul site-ului */
+#poem.panel.active{display:block}
+#site.poem-wall-mode{position:relative;isolation:isolate;min-height:100vh;background:#07152d}
+#site.poem-wall-mode::before{
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background-image:linear-gradient(rgba(3,12,31,.34),rgba(3,12,31,.42)),url("stars.webp");
+    background-position:center;background-size:cover;background-repeat:no-repeat;
+}
+#site.poem-wall-mode .top,#site.poem-wall-mode .tabs,#site.poem-wall-mode .main,#site.poem-wall-mode .footer{position:relative;z-index:1}
+#site.poem-wall-mode .top h1,#site.poem-wall-mode .top p{color:#fff3fb;text-shadow:0 2px 12px rgba(0,0,0,.65)}
+#site.poem-wall-mode .main{background:transparent;border:0;box-shadow:none}
+#site.poem-wall-mode #poem .poem-scene{background:transparent;border-radius:0;min-height:calc(100vh - 190px)}
+#poem .poem-scene{
+    position:relative;isolation:isolate;overflow:hidden;
+    width:100%;min-height:75vh;padding:clamp(18px,4vw,42px);
+    display:flex;align-items:center;justify-content:center;
+    border-radius:24px;
+    background-color:#07152d;
+    background-image:linear-gradient(rgba(3,12,31,.24),rgba(3,12,31,.38)),url("stars.webp");
+    background-position:center;background-size:cover;background-repeat:no-repeat;
+}
+#poem .poem-card{
+    position:relative;z-index:1;width:min(760px,100%);padding:clamp(22px,4vw,42px);
+    border:1px solid rgba(174,203,255,.38);border-radius:22px;
+    background:rgba(5,19,45,.78);color:#f7f4ff;
+    box-shadow:0 20px 55px rgba(0,0,0,.28);backdrop-filter:blur(5px);
+    text-align:center;
+}
+#poem .poem-card h2{color:#ffe0a8;font-size:clamp(25px,4vw,36px);margin:0 0 22px}
+#poem .poem-stanza{margin:0 auto 21px;line-height:1.85;font-family:"Playfair Display",serif;font-size:clamp(15px,2.2vw,19px);font-style:italic}
+#poem .poem-stanza:last-of-type{margin-bottom:24px}
+#poem .poem-divider{color:#f7d58e;margin:4px 0 18px;letter-spacing:8px}
+#poem .poem-signature{font-family:"Playfair Display",serif;font-style:italic;color:#ffd99b;font-size:clamp(18px,2.8vw,23px);line-height:1.7;margin:25px 0 0}
+#poem .poem-tab-heart{font-size:22px;line-height:1}
+@media(max-width:600px){#poem .poem-scene{min-height:70vh;padding:12px;border-radius:18px}#poem .poem-card{padding:22px 15px}#poem .poem-stanza{line-height:1.72;margin-bottom:17px}}
+
 </style>
 </head>
 
@@ -1014,7 +1051,8 @@ h2{
         <button class="tab notes-tab" onclick="showTab('photos',this)">📸 Photos<!-- <span class="new-badge">NEW ✨</span> --></button>
         <button class="tab notes-tab" onclick="showTab('gallery',this)">🦋 Little Things <!-- <span class="new-badge">NEW ✨</span> --> </button>
         <button class="tab notes-tab" onclick="showTab('biaLetter',this)">💌 From Bia <!-- <span class="new-badge">NEW ✨</span> --> </button>
-        <button class="tab notes-tab" onclick="showTab('calendar',this);renderCalendar()">🗓️ Calendar <span class="new-badge">NEW ✨</span></button>
+        <button class="tab notes-tab" onclick="showTab('calendar',this);renderCalendar()">🗓️ Calendar <!--<span class="new-badge">NEW ✨</span> --></button>
+        <button class="tab" onclick="showTab('poem',this)" aria-label="Poezia pentru Bia" title="Poezia pentru Bia"><span class="poem-tab-heart" aria-hidden="true">⭐</span></button>
 		
 
     </nav>
@@ -1308,6 +1346,32 @@ h2{
             </div>
         </section>
 
+        <section id="poem" class="panel">
+            <div class="poem-scene">
+                <article class="poem-card">
+                    <h2>Poezie pentru iubirea vieții mele ❤️‍🔥</h2>
+                    <div class="poem-divider" aria-hidden="true">✦ ── ✧ ── ✦</div>
+                    <p class="poem-stanza">Pe cerul nopții mele plin de stele<br>
+                    Tu ești cea mai luminoasă dintre ele<br>
+                    Pe cerul nopții tale înstelat<br>
+                    Eu sunt în fiecare și te cat'</p>
+                    <div class="poem-divider" aria-hidden="true">✧</div>
+                    <p class="poem-stanza">Te cat' cu a mea lumină blândă, ocrotitoare<br>
+                    Te ating, te mângâi.. ca-ntr-o sărutare<br>
+                    Un sărut tandru, cald și dulce<br>
+                    Ce-n lumea dragostei ne duce</p>
+                    <div class="poem-divider" aria-hidden="true">✧</div>
+                    <p class="poem-stanza">Precum există mereu stelele.. chiar și când e soare<br>
+                    Iar când se lasă noaptea doar luminează mai tare<br>
+                    Așa și eu scumpa mea floare<br>
+                    Mereu voi fi.. în orice împrejurare<br>
+                    Iar când se lasă întunericul și nu va mai fi soare..<br>
+                    Eu voi fi tot aici dar voi lumina mai tare ❤️</p>
+                    <p class="poem-signature">Bianca, să știi că te iubește muult al tau Vlăduț ❤️‍🔥😘</p>
+                </article>
+            </div>
+        </section>
+
         <section id="calendar" class="panel">
             <div class="calendar-head">
                 <button class="calendar-nav" type="button" onclick="changeCalendarMonth(-1)" aria-label="Luna precedentă">‹</button>
@@ -1482,8 +1546,9 @@ function showTab(id,button){
     document.getElementById(id).classList.add("active");
     button.classList.add("active");
 
-    // În modul Fotografii, colajul ocupă întregul fundal al site-ului.
+    // În taburile Fotografii și Poezie, imaginea ocupă întregul fundal al site-ului.
     document.getElementById("site").classList.toggle("photo-wall-mode", id === "photos");
+    document.getElementById("site").classList.toggle("poem-wall-mode", id === "poem");
 
     const memory = document.querySelector(".phone-memory");
 
@@ -1531,11 +1596,15 @@ function onYouTubeIframeAPIReady(){
 const musicTracks = [
     // Adaugă aici melodiile din folderul site-ului. Exemplu: { title: "Melodia noastră", src: "melodie.mp3" },
     { title: "Mirrors ❤️", src: "Mirrors.mp3" },
+	{ title: "Those eyes", src: "ThoseEyes.mp3" },
+	{ title: "A Sky Full Of Stars", src: "ASkyFullOfStars(8DAUDIO).mp3" },
+	{ title: "City of Stars", src: "CityofStars.mp3" },
 	{ title: "MrsMagic X LaLaLand", src: "MrsMagic_LaLaLand.mp3" },
 	{ title: "GoldenHour", src: "GoldenHour(Piano_Version).mp3" },
 	{ title: "I Wanted to Leave", src: "IWantedtoLeave.mp3" },
 	{ title: "Continui să te iubesc", src: "ContinuiSaTeIubesc.mp3" },
 	{ title: "Rain song", src: "melodie.mp3" }
+	
 ];
 let currentTrackIndex = 0;
 let musicLoopEnabled = true;
